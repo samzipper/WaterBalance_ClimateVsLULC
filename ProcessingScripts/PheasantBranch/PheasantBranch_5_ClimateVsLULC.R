@@ -1,0 +1,111 @@
+## McFarland_6_ClimateVsLULC.R
+# This script is intended to take the output of McFarland_4_MonthlyRegressions.R and
+# separate out the climate and LULC contributions to change since the baseline period
+# at an annual scale.
+
+rm(list=ls())
+
+# path to local git repository
+git.dir <- "C:/Users/Sam/WorkGits/WaterBalance_ClimateVsLULC/"
+
+require(ggplot2)
+require(dplyr)
+require(lubridate)
+require(reshape2)
+source(paste0(git.dir, "ProcessingScripts/FitMetrics.R"))
+
+# path to folder with output data
+setwd(paste0(git.dir, "Data/PheasantBranch/"))
+
+# directory to save plots
+plot.dir <- paste0(git.dir, "Plots/PheasantBranch/")
+
+# read in data
+df <- read.csv("GHCN_MonthlyRegressions_OutputAll.csv")
+df.Q <- read.csv("PheasantBranch_Discharge_Monthly.csv")
+
+# date column
+df$date <- ymd(paste0(df$year, "-", df$month, "-15"))
+
+# figure out first/last year of baseline period
+yr.baseline.start <- min(subset(df, group != "prediction")$year)
+yr.baseline.end <- max(subset(df, group != "prediction")$year)
+
+# subset discharge data to common years and sum to annual
+df.Q <- subset(df.Q, year %in% df$year)
+df.Q.ann <- dplyr::summarize(group_by(df.Q, year),
+                      discharge.mm = sum(discharge.mm))
+
+# mean annual discharge for baseline period
+Q.ann.baseline.mean <- mean(subset(df.Q.ann, year>= yr.baseline.start & year<= yr.baseline.end)$discharge.mm)
+Q.ann.baseline.sd <- sd(subset(df.Q.ann, year>= yr.baseline.start & year<= yr.baseline.end)$discharge.mm)
+
+# for each permutation, sum to annual total
+df.perm.ann <- dplyr::summarize(group_by(df, year, perm),
+                         obs.sum = sum(flux),
+                         PCR.sum = sum(PCR))
+
+# merge baseline with df.perm.ann
+df.perm.ann$obs.baseline.static <- Q.ann.baseline.mean
+
+# calculate overall change, climate, and LULC contribution
+df.perm.ann$change.overall.static <- df.perm.ann$obs.sum - df.perm.ann$obs.baseline.static
+df.perm.ann$change.climate.static <- df.perm.ann$PCR.sum - df.perm.ann$obs.baseline.static
+df.perm.ann$change.LULC.static <- df.perm.ann$change.overall.static - df.perm.ann$change.climate.static
+
+# calculate mean and standard deviation
+df.ann <- dplyr::summarize(group_by(df.perm.ann, year),
+                    obs = mean(obs.sum),
+                    PCR.mean = mean(PCR.sum),
+                    PCR.sd = sd(PCR.sum),
+                    change.overall.static.mean = mean(change.overall.static),
+                    change.overall.static.sd = sd(change.overall.static),
+                    change.climate.static.mean = mean(change.climate.static),
+                    change.climate.static.sd = sd(change.climate.static),
+                    change.LULC.static.mean = mean(change.LULC.static),
+                    change.LULC.static.sd = sd(change.LULC.static))
+
+# calculate some min/max columns to use for ribbons
+df.ann$change.overall.static.min <- df.ann$change.overall.static.mean - df.ann$change.overall.static.sd
+df.ann$change.overall.static.max <- df.ann$change.overall.static.mean + df.ann$change.overall.static.sd
+df.ann$change.climate.static.min <- df.ann$change.climate.static.mean - df.ann$change.climate.static.sd
+df.ann$change.climate.static.max <- df.ann$change.climate.static.mean + df.ann$change.climate.static.sd
+df.ann$change.LULC.static.min <- df.ann$change.LULC.static.mean - df.ann$change.LULC.static.sd
+df.ann$change.LULC.static.max <- df.ann$change.LULC.static.mean + df.ann$change.LULC.static.sd
+
+# melt for histogram
+df.ann.melt <- melt(df.ann[,c("year", "change.overall.static.mean", "change.climate.static.mean", "change.LULC.static.mean")], id="year")
+df.ann.melt <- subset(df.ann.melt, year>yr.baseline.end)
+
+# histogram
+p.climate.LULC.hist <-
+  ggplot(subset(df.ann.melt, variable != "change.overall.static.mean")) +
+  geom_vline(xintercept=0, color="gray65") +
+  geom_density(aes(x=value, fill=variable), alpha=0.5, color=NA) +
+  geom_density(data=subset(df.ann.melt, variable=="change.overall.static.mean"), aes(x=value), color="black", fill=NA) +
+  scale_x_continuous(name="Change in Annual Runoff Depth [mm]") +
+  scale_y_continuous(name="Density") +
+  scale_fill_manual(name="Driver: ", 
+                    values=c("change.climate.static.mean"="red", "change.LULC.static.mean"="forestgreen"), 
+                    labels=c("change.climate.static.mean"="Climate", "change.LULC.static.mean"="LULC")) +
+  theme_bw() +
+  theme(panel.grid=element_blank(),
+        legend.position="bottom")
+
+# make some ribbon plots
+p.ribbon.static <- 
+  ggplot(df.ann, aes(x=year)) +
+  geom_line(aes(y=change.overall.static.mean), color="black") +
+  geom_ribbon(aes(ymin=change.climate.static.min, ymax=change.climate.static.max), fill="red", alpha=0.25) +
+  geom_ribbon(aes(ymin=change.LULC.static.min, ymax=change.LULC.static.max), fill="green", alpha=0.25) +
+  geom_hline(yintercept=0, color="gray65") +
+  scale_x_continuous(name="Year", expand=c(0,0)) +
+  scale_y_continuous(name="Change from Baseline Period [mm]") +
+  theme_bw() +
+  theme(panel.grid=element_blank())
+ggsave(paste0(plot.dir, "GHCN_PheasantBranch_ClimateVsLULC_AnnualStatic.png"),
+       arrangeGrob(p.ribbon.static, p.climate.LULC.hist, ncol=2), width=12, height=6, units="in")
+
+mean(subset(df.ann, year >= yr.baseline.start & year <= yr.baseline.end)$change.overall.static.mean)
+mean(subset(df.ann, year >= yr.baseline.start & year <= yr.baseline.end)$change.climate.static.mean)
+mean(subset(df.ann, year >= yr.baseline.start & year <= yr.baseline.end)$change.LULC.static.mean)
