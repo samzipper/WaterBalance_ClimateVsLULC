@@ -33,6 +33,7 @@ CalculateClimatePCR <- function(df, mo, flux.name, var.predictors,
   #'  -month
   #'  -[flux.name] = hydrological flux of interest
   #'  -[var.predictors] = one column for each candidate predictor variable
+  #'  All other columns will be ignored.
   #'  
   #' output returned is:
   #'  -df.out.all = data frame with the following columns

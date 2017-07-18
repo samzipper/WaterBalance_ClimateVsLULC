@@ -34,7 +34,7 @@ yr.baseline.end <- max(subset(df, group != "prediction")$year)
 # subset discharge data to common years and sum to annual
 df.Q <- subset(df.Q, year %in% df$year)
 df.Q.ann <- dplyr::summarize(group_by(df.Q, year),
-                      discharge.mm = sum(discharge.mm))
+                             discharge.mm = sum(discharge.mm))
 
 # mean annual discharge for baseline period
 Q.ann.baseline.mean <- mean(subset(df.Q.ann, year>= yr.baseline.start & year<= yr.baseline.end)$discharge.mm)
@@ -42,8 +42,8 @@ Q.ann.baseline.sd <- sd(subset(df.Q.ann, year>= yr.baseline.start & year<= yr.ba
 
 # for each permutation, sum to annual total
 df.perm.ann <- dplyr::summarize(group_by(df, year, perm),
-                         obs.sum = sum(flux),
-                         PCR.sum = sum(PCR))
+                                obs.sum = sum(flux),
+                                PCR.sum = sum(PCR))
 
 # merge baseline with df.perm.ann
 df.perm.ann$obs.baseline.static <- Q.ann.baseline.mean
@@ -55,15 +55,15 @@ df.perm.ann$change.LULC.static <- df.perm.ann$change.overall.static - df.perm.an
 
 # calculate mean and standard deviation
 df.ann <- dplyr::summarize(group_by(df.perm.ann, year),
-                    obs = mean(obs.sum),
-                    PCR.mean = mean(PCR.sum),
-                    PCR.sd = sd(PCR.sum),
-                    change.overall.static.mean = mean(change.overall.static),
-                    change.overall.static.sd = sd(change.overall.static),
-                    change.climate.static.mean = mean(change.climate.static),
-                    change.climate.static.sd = sd(change.climate.static),
-                    change.LULC.static.mean = mean(change.LULC.static),
-                    change.LULC.static.sd = sd(change.LULC.static))
+                           obs = mean(obs.sum),
+                           PCR.mean = mean(PCR.sum),
+                           PCR.sd = sd(PCR.sum),
+                           change.overall.static.mean = mean(change.overall.static),
+                           change.overall.static.sd = sd(change.overall.static),
+                           change.climate.static.mean = mean(change.climate.static),
+                           change.climate.static.sd = sd(change.climate.static),
+                           change.LULC.static.mean = mean(change.LULC.static),
+                           change.LULC.static.sd = sd(change.LULC.static))
 
 # calculate some min/max columns to use for ribbons
 df.ann$change.overall.static.min <- df.ann$change.overall.static.mean - df.ann$change.overall.static.sd

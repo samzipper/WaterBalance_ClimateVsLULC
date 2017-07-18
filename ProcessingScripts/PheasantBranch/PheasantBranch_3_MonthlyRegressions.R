@@ -223,8 +223,8 @@ mo.list <- seq(1,12)
 for (mo in mo.list){
   
   df.out.mo <- CalculateClimatePCR(df=df, mo=mo, flux.name="discharge.mm", var.predictors=var.options,
-                                   yr.baseline.start=1974, yr.baseline.end=1995, n.val.yr=5,
-                                   p.thres=0.10, cum.var=0.95, min.var=0.005, 
+                                   yr.baseline.start=yr.baseline.start, yr.baseline.end=yr.baseline.end, n.val.yr=5,
+                                   p.thres=p.thres, cum.var=0.95, min.var=0.005, 
                                    neg.allowed=F, write.vars.keep=F, write.PC.keep=F, PC.plot=F, write.perm=F)
   
   # combined with other data
