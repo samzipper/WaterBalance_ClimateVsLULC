@@ -1,6 +1,6 @@
 CalculateClimatePCR <- function(df, mo, flux.name, var.predictors, 
                                 yr.baseline.start, yr.baseline.end, n.val.yr,
-                                p.thres=0.10, cum.var=0.95, min.var=0.005, n.perm=250, seed=1,
+                                p.thres=0.10, cum.var=0.80, min.var=0.01, n.perm=250, seed=1,
                                 neg.allowed=F,  write.vars.keep=T, write.PC.keep=T, PC.plot=F, write.perm=T){
   #' This script is intended to use principal components regression (PCR) to 
   #' build statistical relationships between meteorological variables and a
@@ -81,6 +81,9 @@ CalculateClimatePCR <- function(df, mo, flux.name, var.predictors,
   # significance pruning- go through and select variables with significant linear relationships in historial period
   vars.keep <- character(0)
   for (v in var.options){
+    # scale to mean and sd
+    col.v <- which(colnames(df.mo)==v)
+    df.mo[,col.v] <- scale.baseline(df.mo[,col.v], df.mo$year, yr.baseline.start, yr.baseline.end)
     if (length(unique(df.mo[df.mo$year<=yr.baseline.end,v]))>1){
       # only check this potential variable if it has variability
       fmla.v <- paste0("flux ~ ", v)
@@ -100,16 +103,13 @@ CalculateClimatePCR <- function(df, mo, flux.name, var.predictors,
   # trim df.mo to vars only
   df.mo.vars <- df.mo[, vars.keep]
   
-  ## 4. Scale data to z-score based on 1986-2013 period
-  df.mo.vars.scaled <- as.data.frame(apply(df.mo.vars, MARGIN=2, FUN=scale.baseline, df.mo$year, yr.baseline.start, yr.baseline.end))
-  
   ## 5. Calculate principal components
   # calculate PC rotations based on 1986-2013 data only
   fmla.vars.keep <- as.formula(paste0("~ ", paste0(vars.keep, collapse="+")))
-  PCA.fit <- prcomp(fmla.vars.keep, data=df.mo.vars.scaled[df.mo$year <= yr.baseline.end, ], na.action=na.omit)
+  PCA.fit <- prcomp(fmla.vars.keep, data=df.mo.vars[df.mo$year <= yr.baseline.end, ], na.action=na.omit)
   
   # apply PCA.fit to entire period
-  df.mo.PCs <- as.data.frame(predict(PCA.fit, newdata=df.mo.vars.scaled))
+  df.mo.PCs <- as.data.frame(predict(PCA.fit, newdata=df.mo.vars))
   
   # build a model
   df.mo.PCs$flux <- df.mo$flux     # add in your desired predictor variable
@@ -122,13 +122,21 @@ CalculateClimatePCR <- function(df, mo, flux.name, var.predictors,
   
   # now, look through remaining PCs and see if any are significantly correlated with output variable, and retain those as well
   # only select from those that explain >0.5% of total variance observed in predictors
-  PC.max <- min(which(summary(PCA.fit)$importance["Proportion of Variance", ] < min.var))  # max allowed PC
-  PC.options <-paste0("PC", (PC.95+1):(PC.max-1))  # number of PCs will correspond to length of vars.keep
-  for (PC in PC.options){
-    fmla.PC <- paste0("flux ~ ", PC)
-    fit.PC <- lm(fmla.PC, data=df.mo.PCs)
-    if (lmp(fit.PC) <= p.thres){
-      PC.keep <- c(PC.keep, PC)
+  if (sum(summary(PCA.fit)$importance["Proportion of Variance", ]<min.var) > 0){
+    PC.max <- min(which(summary(PCA.fit)$importance["Proportion of Variance", ] < min.var))  # max allowed PC
+  } else {
+    # if all PCs are above min.var, add 1 to PC.max
+    PC.max <- length(summary(PCA.fit)$importance["Proportion of Variance", ])+1
+  }
+  
+  if (PC.max > PC.95){
+    PC.options <-paste0("PC", (PC.95+1):(PC.max-1))  # number of PCs will correspond to length of vars.keep
+    for (PC in PC.options){
+      fmla.PC <- paste0("flux ~ ", PC)
+      fit.PC <- lm(fmla.PC, data=df.mo.PCs)
+      if (lmp(fit.PC) <= p.thres){
+        PC.keep <- c(PC.keep, PC)
+      }
     }
   }
   

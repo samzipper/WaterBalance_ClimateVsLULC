@@ -1,4 +1,4 @@
-## PheasantBranch_3_SensitivityBaseline.R
+## PheasantBranch_6_SensitivityBaseline.R
 # This script is intended to quantify the sensitivity of the results for the Pheasant Branch watershed
 # to the selection of the baseline period.
 
@@ -46,6 +46,10 @@ plot.dir <- paste0(git.dir, "Plots/PheasantBranch/")
 # set significance threshold for pruning
 p.thres <- 0.10
 
+# variance for selecting options
+cum.var <- 0.8
+min.var <- 0.01
+
 ## decide "baseline" period (inclusive)
 # logical end options:
 #   1992: Gebert et al. (2012) identify breakpoint in Pheasant Branch streamflow starting in 1993
@@ -55,14 +59,14 @@ p.thres <- 0.10
 #   2004: 30 years
 #   
 yr.baseline.start <- 1974
-yr.baseline.end.all <- seq(1988,1996)  # 9 years: 1992 +/- 4
+yr.baseline.end.all <- seq(1992,1998)  # 7 years: 1995 +/- 3
 
 # number of permutations to run
 n.perm <- 250
 
 # read in discharge and met data frames
 df.met <- read.csv(paste0(git.dir, "Data/PheasantBranch/USW00014837_GHCN_MetData_Monthly.csv"))  # use same met data as McFarland
-df.Q <- read.csv("PheasantBranch_Discharge_Monthly.csv")
+df.Q <- read.csv("PheasantBranch_BaseflowSeparation_Monthly.csv")   # this is from the WHAT online baseflow separation filter for Pheasant branch
 
 # merge data frames, with df.met defining the temporal extent
 df <- merge(df.met, df.Q, all.x=T)
@@ -208,7 +212,7 @@ df$defc.6mo.sq <- df$defc.6mo^2
 df$defc.12mo.sq <- df$defc.12mo^2
 
 # get list of all possible predictor variables
-var.options <- colnames(df)[!(colnames(df) %in% c("year","month","discharge.mm", "discharge.est", "prec.gt.101"))]
+var.options <- colnames(df)[!(colnames(df) %in% c("year","month","discharge.mm", "runoff.mm", "baseflow.mm", "flux.est", "prec.gt.101"))]
 
 ## data frame to store overall output
 df.summary <- data.frame(month = numeric(0),
@@ -219,163 +223,181 @@ df.summary <- data.frame(month = numeric(0),
                          NRMSE.cal = numeric(0),
                          NRMSE.val = numeric(0))
 
+## which flux to analyze?
+flux.name.all <- c("discharge.mm", "runoff.mm", "baseflow.mm")
+
 # list of months
 mo.list <- seq(1,12)
-for (yr.baseline.end in yr.baseline.end.all){
-  for (mo in mo.list){
-    
-    # run PCR script
-    df.out.mo <- CalculateClimatePCR(df=df, mo=mo, flux.name="discharge.mm", var.predictors=var.options,
-                                     yr.baseline.start=yr.baseline.start, yr.baseline.end=yr.baseline.end,
-                                     n.perm=n.perm, n.val.yr=5, p.thres=p.thres, cum.var=0.95, min.var=0.005, 
-                                     neg.allowed=F, write.vars.keep=F, write.PC.keep=F, PC.plot=F, write.perm=F)
-    df.out.mo$yr.baseline.start <- yr.baseline.start
-    df.out.mo$yr.baseline.end <- yr.baseline.end
-    
-    # combined with other data
-    if (exists("df.out")){
-      df.out <- rbind(df.out, df.out.mo)
-    } else {
-      df.out <- df.out.mo
+for (flux.name in flux.name.all){
+  
+  for (yr.baseline.end in yr.baseline.end.all){
+    # number of years to save for validation
+    n.val.yr <- round(length(seq(yr.baseline.start, yr.baseline.end))*0.25)
+    for (mo in mo.list){
+      
+      # run PCR script
+      df.out.mo <- CalculateClimatePCR(df=df, mo=mo, flux.name=flux.name, var.predictors=var.options,
+                                       yr.baseline.start=yr.baseline.start, yr.baseline.end=yr.baseline.end,
+                                       n.perm=n.perm, n.val.yr=n.val.yr, p.thres=p.thres, cum.var=cum.var, min.var=min.var, 
+                                       neg.allowed=F, write.vars.keep=F, write.PC.keep=F, PC.plot=F, write.perm=F)
+      df.out.mo$yr.baseline.start <- yr.baseline.start
+      df.out.mo$yr.baseline.end <- yr.baseline.end
+      
+      # combined with other data
+      if (exists("df.out")){
+        df.out <- rbind(df.out, df.out.mo)
+      } else {
+        df.out <- df.out.mo
+      }
+      
+      # status update
+      print(paste0("flux ", flux.name, " baseline end ", yr.baseline.end, " month ", mo, " complete"))
+      
     }
-    
-    # status update
-    print(paste0("baseline end ", yr.baseline.end, " month ", mo, " complete"))
-    
   }
+  
+  # save output csv
+  write.csv(df.out, paste0(flux.name, "/GHCN_SensitivityBaseline_OutputAll.csv"), row.names=F, quote=F)
+  
+  ## calculate fit metrics by yr.baseline.end
+  df.baseline <- dplyr::summarize(group_by(subset(df.out, group != "prediction"), yr.baseline.end, group),
+                                  RMSE = RMSE(PCR, flux),
+                                  NSE = NashSutcliffe(PCR, flux))
+  df.baseline.melt <- melt(df.baseline, id=c("group", "yr.baseline.end"))
+  
+  ## calculate baseline period discharge
+  df.year.perm.baseline <-
+    dplyr::summarize(group_by(df.out, year, perm, yr.baseline.end),
+                     obs.sum = sum(flux),
+                     PCR.sum = sum(PCR))
+  df.year.baseline <-
+    dplyr::summarize(group_by(df.year.perm.baseline, year, yr.baseline.end),
+                     obs.mean = mean(obs.sum),
+                     PCR.mean = mean(PCR.sum))
+  
+  df.Q.baseline <-
+    dplyr::summarize(group_by(df.year.baseline, yr.baseline.end),
+                     obs.baseline.mean = mean(obs.mean[year<=yr.baseline.end]))
+  
+  ## separate LULC vs climate
+  df.LULCvClimate <- merge(df.year.perm.baseline, df.Q.baseline, by=c("yr.baseline.end"), all.x=T)
+  df.LULCvClimate$change.overall <- df.LULCvClimate$obs.sum - df.LULCvClimate$obs.baseline.mean
+  df.LULCvClimate$change.climate <- df.LULCvClimate$PCR.sum - df.LULCvClimate$obs.baseline.mean
+  df.LULCvClimate$change.LULC <- df.LULCvClimate$change.overall - df.LULCvClimate$change.climate
+  
+  df.LULCvClimate.baseline <-
+    dplyr::summarize(group_by(df.LULCvClimate, year, yr.baseline.end),
+                     obs = mean(obs.sum),
+                     PCR.mean = mean(PCR.sum),
+                     PCR.sd = sd(PCR.sum),
+                     change.overall.mean = mean(change.overall),
+                     change.overall.sd = sd(change.overall),
+                     change.climate.mean = mean(change.climate),
+                     change.climate.sd = sd(change.climate),
+                     change.LULC.mean = mean(change.LULC),
+                     change.LULC.sd = sd(change.LULC))
+  
+  df.LULCvClimate.prediction <- subset(df.LULCvClimate.baseline, year>max(df.LULCvClimate$yr.baseline.end))
+  
+  df.LULCvClimate.baseline.melt <- melt(df.LULCvClimate.baseline[,c("year", "yr.baseline.end", "change.overall.mean", "change.climate.mean", "change.LULC.mean")],
+                                        id=c("year", "yr.baseline.end"))
+  
+  # calculate some min/max columns to use for ribbons
+  df.LULCvClimate.baseline$change.overall.min <- df.LULCvClimate.baseline$change.overall.mean - df.LULCvClimate.baseline$change.overall.sd
+  df.LULCvClimate.baseline$change.overall.max <- df.LULCvClimate.baseline$change.overall.mean + df.LULCvClimate.baseline$change.overall.sd
+  df.LULCvClimate.baseline$change.climate.min <- df.LULCvClimate.baseline$change.climate.mean - df.LULCvClimate.baseline$change.climate.sd
+  df.LULCvClimate.baseline$change.climate.max <- df.LULCvClimate.baseline$change.climate.mean + df.LULCvClimate.baseline$change.climate.sd
+  df.LULCvClimate.baseline$change.LULC.min <- df.LULCvClimate.baseline$change.LULC.mean - df.LULCvClimate.baseline$change.LULC.sd
+  df.LULCvClimate.baseline$change.LULC.max <- df.LULCvClimate.baseline$change.LULC.mean + df.LULCvClimate.baseline$change.LULC.sd
+  
+  ## make plots
+  # barplot of fit metrics by group and yr.baseline.end
+  p.fit.group.baseline <-
+    ggplot(df.baseline.melt, aes(x=yr.baseline.end, y=value, fill=group)) +
+    geom_hline(yintercept=0, color="gray65") +
+    geom_bar(stat="identity", position="dodge") +
+    facet_grid(variable~., scales="free_y") +
+    scale_x_continuous(name="End of Baseline Period [year]", 
+                       breaks=seq(min(df.baseline$yr.baseline.end), max(df.baseline$yr.baseline.end))) +
+    scale_y_continuous(name="PCR Fit") +
+    theme_bw() +
+    theme(panel.grid=element_blank())
+  ggsave(paste0(plot.dir, "GHCN_PheasantBranch_SensitivityBaseline_", flux.name, "_p.fit.group.baseline.png"),
+         p.fit.group.baseline, width=8, height=6, units="in")
+  
+  # line plot of observed vs PCR facet by yr.baseline.end
+  p.facet.obs.PCR <-
+    ggplot(melt(df.year.baseline, id=c("year", "yr.baseline.end")), aes(x=year, y=value, color=variable)) +
+    geom_hline(yintercept=0, color="gray65") +
+    geom_line() +
+    facet_wrap(~yr.baseline.end) +
+    scale_x_continuous(name="Year") +
+    scale_y_continuous(name="Annual Discharge [mm]") +
+    scale_color_discrete(name="Data", labels=c("obs.mean"="Observed", "PCR.mean"="PCR")) +
+    theme_bw() +
+    theme(panel.grid=element_blank(),
+          legend.position="bottom")
+  ggsave(paste0(plot.dir, "GHCN_PheasantBranch_SensitivityBaseline_", flux.name, "_p.facet.obs.PCR.png"),
+         p.facet.obs.PCR, width=8, height=6, units="in")
+  
+  # line plot of baseline period discharge as a function of yr.baseline.end
+  p.baseline.discharge <-
+    ggplot(df.Q.baseline, aes(x=yr.baseline.end, y=obs.baseline.mean)) +
+    geom_line() + geom_point() +
+    scale_x_continuous(name="End of Baseline Period [year]", 
+                       breaks=seq(min(df.Q.baseline$yr.baseline.end), max(df.Q.baseline$yr.baseline.end))) +
+    scale_y_continuous(name="Baseline Period Mean Discharge [mm]") +
+    theme_bw() +
+    theme(panel.grid=element_blank())
+  ggsave(paste0(plot.dir, "GHCN_PheasantBranch_SensitivityBaseline_", flux.name, "_p.baseline.discharge.png"),
+         p.baseline.discharge, width=8, height=6, units="in")
+  
+  # density plot of LULC and climate effects for prediction period
+  p.dens.LULC.baseline <-
+    ggplot(melt(subset(df.LULCvClimate.prediction, select=c("year", "yr.baseline.end", "change.overall.mean", "change.climate.mean", "change.LULC.mean")), 
+                id=c("year", "yr.baseline.end")), 
+           aes(x=value, color=factor(yr.baseline.end))) +
+    geom_vline(xintercept=0, color="gray65") +
+    geom_density() +
+    facet_grid(.~variable, scales="free", 
+               labeller=as_labeller(c("change.overall.mean"="Overall", "change.climate.mean"="Climate", "change.LULC.mean"="LULC"))) +
+    scale_x_continuous(name="Discharge Change from Baseline Period [mm]") +
+    scale_y_continuous(name="Density") +
+    scale_color_discrete(name="End of Baseline Period [year]") +
+    theme_bw() +
+    theme(panel.grid=element_blank(),
+          legend.position="bottom")
+  ggsave(paste0(plot.dir, "GHCN_PheasantBranch_SensitivityBaseline_", flux.name, "_p.dens.LULC.baseline.png"),
+         p.dens.LULC.baseline, width=8, height=6, units="in")
+  
+  # ribbon plot of LULC and climate effects facet by yr.baseline.end
+  p.ribbon <- 
+    ggplot(df.LULCvClimate.baseline, aes(x=year)) +
+    geom_line(aes(y=change.overall.mean), color="black") +
+    geom_ribbon(aes(ymin=change.climate.min, ymax=change.climate.max), fill="red", alpha=0.25) +
+    geom_ribbon(aes(ymin=change.LULC.min, ymax=change.LULC.max), fill="green", alpha=0.25) +
+    geom_hline(yintercept=0, color="gray65") +
+    facet_wrap(~yr.baseline.end, scales="free_y") +
+    scale_x_continuous(name="Year", expand=c(0,0)) +
+    scale_y_continuous(name="Change from Baseline Period [mm]") +
+    theme_bw() +
+    theme(panel.grid=element_blank())
+  ggsave(paste0(plot.dir, "GHCN_PheasantBranch_SensitivityBaseline_", flux.name, "_p.ribbon.png"),
+         p.ribbon, width=8, height=6, units="in")
+  
+  p.change.baseline <- 
+    ggplot(df.LULCvClimate.baseline.melt, aes(x=year, y=value, color=factor(yr.baseline.end))) +
+    geom_line() +
+    geom_hline(yintercept=0, color="gray65") +
+    facet_wrap(~variable, scales="free_y",  
+               labeller=as_labeller(c("change.overall.mean"="Overall", "change.climate.mean"="Climate", "change.LULC.mean"="LULC"))) +
+    scale_x_continuous(name="Year", expand=c(0,0)) +
+    scale_y_continuous(name="Change from Baseline Period [mm]") +
+    theme_bw() +
+    theme(panel.grid=element_blank(),
+          legend.position="bottom")
+  ggsave(paste0(plot.dir, "GHCN_PheasantBranch_SensitivityBaseline_", flux.name, "_p.change.baseline.png"),
+         p.change.baseline, width=8, height=6, units="in")
+  
+  rm(df.out)
 }
-
-# save output csv
-write.csv(df.out, "GHCN_SensitivityBaseline_OutputAll.csv", row.names=F, quote=F)
-
-## calculate fit metrics by yr.baseline.end
-df.baseline <- dplyr::summarize(group_by(subset(df.out, group != "prediction"), yr.baseline.end, group),
-                                RMSE = RMSE(PCR, flux),
-                                NSE = NashSutcliffe(PCR, flux))
-df.baseline.melt <- melt(df.baseline, id=c("group", "yr.baseline.end"))
-
-## calculate baseline period discharge
-df.year.perm.baseline <-
-  dplyr::summarize(group_by(df.out, year, perm, yr.baseline.end),
-                   obs.sum = sum(flux),
-                   PCR.sum = sum(PCR))
-df.year.baseline <-
-  dplyr::summarize(group_by(df.year.perm.baseline, year, yr.baseline.end),
-                   obs.mean = mean(obs.sum),
-                   PCR.mean = mean(PCR.sum))
-
-df.Q.baseline <-
-  dplyr::summarize(group_by(df.year.baseline, yr.baseline.end),
-                   obs.baseline.mean = mean(obs.mean[year<=yr.baseline.end]))
-
-## separate LULC vs climate
-df.LULCvClimate <- merge(df.year.perm.baseline, df.Q.baseline, by=c("yr.baseline.end"), all.x=T)
-df.LULCvClimate$change.overall <- df.LULCvClimate$obs.sum - df.LULCvClimate$obs.baseline.mean
-df.LULCvClimate$change.climate <- df.LULCvClimate$PCR.sum - df.LULCvClimate$obs.baseline.mean
-df.LULCvClimate$change.LULC <- df.LULCvClimate$change.overall - df.LULCvClimate$change.climate
-
-df.LULCvClimate.baseline <-
-  dplyr::summarize(group_by(df.LULCvClimate, year, yr.baseline.end),
-                   obs = mean(obs.sum),
-                   PCR.mean = mean(PCR.sum),
-                   PCR.sd = sd(PCR.sum),
-                   change.overall.mean = mean(change.overall),
-                   change.overall.sd = sd(change.overall),
-                   change.climate.mean = mean(change.climate),
-                   change.climate.sd = sd(change.climate),
-                   change.LULC.mean = mean(change.LULC),
-                   change.LULC.sd = sd(change.LULC))
-
-df.LULCvClimate.prediction <- subset(df.LULCvClimate.baseline, year>max(df.LULCvClimate$yr.baseline.end))
-
-# calculate some min/max columns to use for ribbons
-df.LULCvClimate.baseline$change.overall.min <- df.LULCvClimate.baseline$change.overall.mean - df.LULCvClimate.baseline$change.overall.sd
-df.LULCvClimate.baseline$change.overall.max <- df.LULCvClimate.baseline$change.overall.mean + df.LULCvClimate.baseline$change.overall.sd
-df.LULCvClimate.baseline$change.climate.min <- df.LULCvClimate.baseline$change.climate.mean - df.LULCvClimate.baseline$change.climate.sd
-df.LULCvClimate.baseline$change.climate.max <- df.LULCvClimate.baseline$change.climate.mean + df.LULCvClimate.baseline$change.climate.sd
-df.LULCvClimate.baseline$change.LULC.min <- df.LULCvClimate.baseline$change.LULC.mean - df.LULCvClimate.baseline$change.LULC.sd
-df.LULCvClimate.baseline$change.LULC.max <- df.LULCvClimate.baseline$change.LULC.mean + df.LULCvClimate.baseline$change.LULC.sd
-
-## make plots
-# barplot of fit metrics by group and yr.baseline.end
-p.fit.group.baseline <-
-  ggplot(df.baseline.melt, aes(x=yr.baseline.end, y=value, fill=group)) +
-  geom_hline(yintercept=0, color="gray65") +
-  geom_bar(stat="identity", position="dodge") +
-  facet_grid(variable~., scales="free_y") +
-  scale_x_continuous(name="End of Baseline Period [year]", 
-                     breaks=seq(min(df.baseline$yr.baseline.end), max(df.baseline$yr.baseline.end))) +
-  scale_y_continuous(name="PCR Fit") +
-  theme_bw() +
-  theme(panel.grid=element_blank())
-ggsave(paste0(plot.dir, "GHCN_PheasantBranch_SensitivityBaseline_p.fit.group.baseline.png"),
-       p.fit.group.baseline, width=8, height=6, units="in")
-
-# line plot of observed vs PCR facet by yr.baseline.end
-p.facet.obs.PCR <-
-  ggplot(melt(df.year.baseline, id=c("year", "yr.baseline.end")), aes(x=year, y=value, color=variable)) +
-  geom_hline(yintercept=0, color="gray65") +
-  geom_line() +
-  facet_wrap(~yr.baseline.end) +
-  scale_x_continuous(name="Year") +
-  scale_y_continuous(name="Annual Discharge [mm]") +
-  scale_color_discrete(name="Data", labels=c("obs.mean"="Observed", "PCR.mean"="PCR")) +
-  theme_bw() +
-  theme(panel.grid=element_blank(),
-        legend.position="bottom")
-ggsave(paste0(plot.dir, "GHCN_PheasantBranch_SensitivityBaseline_p.facet.obs.PCR.png"),
-       p.facet.obs.PCR, width=8, height=6, units="in")
-
-# line plot of baseline period discharge as a function of yr.baseline.end
-p.baseline.discharge <-
-  ggplot(df.Q.baseline, aes(x=yr.baseline.end, y=obs.baseline.mean)) +
-  geom_line() + geom_point() +
-  scale_x_continuous(name="End of Baseline Period [year]", 
-                     breaks=seq(min(df.Q.baseline$yr.baseline.end), max(df.Q.baseline$yr.baseline.end))) +
-  scale_y_continuous(name="Baseline Period Mean Discharge [mm]") +
-  theme_bw() +
-  theme(panel.grid=element_blank())
-ggsave(paste0(plot.dir, "GHCN_PheasantBranch_SensitivityBaseline_p.baseline.discharge.png"),
-       p.baseline.discharge, width=8, height=6, units="in")
-
-# density plot of LULC and climate effects for prediction period
-p.dens.LULC.baseline <-
-  ggplot(melt(subset(df.LULCvClimate.prediction, select=c("year", "yr.baseline.end", "change.overall.mean", "change.climate.mean", "change.LULC.mean")), 
-              id=c("year", "yr.baseline.end")), 
-         aes(x=value, color=factor(yr.baseline.end))) +
-  geom_vline(xintercept=0, color="gray65") +
-  geom_density() +
-  facet_grid(.~variable, scales="free", 
-             labeller=as_labeller(c("change.overall.mean"="Overall", "change.climate.mean"="Climate", "change.LULC.mean"="LULC"))) +
-  scale_x_continuous(name="Discharge Change from Baseline Period [mm]") +
-  scale_y_continuous(name="Density") +
-  scale_color_discrete(name="End of Baseline Period [year]") +
-  theme_bw() +
-  theme(panel.grid=element_blank(),
-        legend.position="bottom")
-ggsave(paste0(plot.dir, "GHCN_PheasantBranch_SensitivityBaseline_p.dens.LULC.baseline.png"),
-       p.dens.LULC.baseline, width=8, height=6, units="in")
-
-# ribbon plot of LULC and climate effects facet by yr.baseline.end
-p.ribbon <- 
-  ggplot(df.LULCvClimate.baseline, aes(x=year)) +
-  geom_line(aes(y=change.overall.mean), color="black") +
-  geom_ribbon(aes(ymin=change.climate.min, ymax=change.climate.max), fill="red", alpha=0.25) +
-  geom_ribbon(aes(ymin=change.LULC.min, ymax=change.LULC.max), fill="green", alpha=0.25) +
-  geom_hline(yintercept=0, color="gray65") +
-  facet_wrap(~yr.baseline.end, scales="free_y") +
-  scale_x_continuous(name="Year", expand=c(0,0)) +
-  scale_y_continuous(name="Change from Baseline Period [mm]") +
-  theme_bw() +
-  theme(panel.grid=element_blank())
-ggsave(paste0(plot.dir, "GHCN_PheasantBranch_SensitivityBaseline_p.ribbon.png"),
-       p.ribbon, width=8, height=6, units="in")
-
-ks.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1989)$change.overall.mean, 
-        subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.overall.mean)$p.value
-
-ks.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1989)$change.LULC.mean, 
-        subset(df.LULCvClimate.prediction, yr.baseline.end==1990)$change.LULC.mean)$p.value
-
-ks.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1989)$change.climate.mean, 
-        subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean)$p.value

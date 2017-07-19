@@ -11,7 +11,6 @@ git.dir <- "C:/Users/Sam/WorkGits/WaterBalance_ClimateVsLULC/"
 
 # load packages
 source(paste0(git.dir, "ProcessingScripts/PCA_Functions.R"))
-source(paste0(git.dir, "ProcessingScripts/lmp.R"))
 source(paste0(git.dir, "ProcessingScripts/FitMetrics.R"))
 source(paste0(git.dir, "ProcessingScripts/CalculateClimatePCR.R"))
 require(ggplot2)
@@ -42,11 +41,12 @@ scale.baseline <- function(x,year,yr.start,yr.end){
 # path to folder with output data
 setwd(paste0(git.dir, "Data/PheasantBranch/"))
 
-# directory to save plots
-plot.dir <- paste0(git.dir, "Plots/PheasantBranch/")
-
 # set significance threshold for pruning
 p.thres <- 0.10
+
+# variance for selecting options
+cum.var <- 0.8
+min.var <- 0.01
 
 ## decide "baseline" period (inclusive)
 # logical end options:
@@ -57,17 +57,20 @@ p.thres <- 0.10
 #   2004: 30 years
 #   
 yr.baseline.start <- 1974
-yr.baseline.end <- 1995
+yr.baseline.end.all <- c(1992, 1995)
+
+## which flux to analyze?
+flux.name.all <- c("discharge.mm", "runoff.mm", "baseflow.mm")
 
 # read in discharge and met data frames
 df.met <- read.csv(paste0(git.dir, "Data/PheasantBranch/USW00014837_GHCN_MetData_Monthly.csv"))  # use same met data as McFarland
-df.Q <- read.csv("PheasantBranch_Discharge_Monthly.csv")
+df.Q <- read.csv("PheasantBranch_BaseflowSeparation_Monthly.csv")   # this is from the WHAT online baseflow separation filter for Pheasant branch
 
 # merge data frames, with df.met defining the temporal extent
 df <- merge(df.met, df.Q, all.x=T)
 
 # make column for output variable
-df$discharge.est <- NaN
+df$flux.est <- NaN
 
 ## calculate a bunch of meteorological variables
 # calculate deficit variable
@@ -207,7 +210,7 @@ df$defc.6mo.sq <- df$defc.6mo^2
 df$defc.12mo.sq <- df$defc.12mo^2
 
 # get list of all possible predictor variables
-var.options <- colnames(df)[!(colnames(df) %in% c("year","month","discharge.mm", "discharge.est", "prec.gt.101"))]
+var.options <- colnames(df)[!(colnames(df) %in% c("year","month","discharge.mm", "runoff.mm", "baseflow.mm", "flux.est", "prec.gt.101"))]
 
 ## data frame to store overall output
 df.summary <- data.frame(month = numeric(0),
@@ -220,30 +223,37 @@ df.summary <- data.frame(month = numeric(0),
 
 # list of months
 mo.list <- seq(1,12)
-for (mo in mo.list){
-  
-  df.out.mo <- CalculateClimatePCR(df=df, mo=mo, flux.name="discharge.mm", var.predictors=var.options,
-                                   yr.baseline.start=yr.baseline.start, yr.baseline.end=yr.baseline.end, n.val.yr=5,
-                                   p.thres=p.thres, cum.var=0.95, min.var=0.005, 
-                                   neg.allowed=F, write.vars.keep=F, write.PC.keep=F, PC.plot=F, write.perm=F)
-  
-  # combined with other data
-  if (exists("df.out")){
-    df.out <- rbind(df.out, df.out.mo)
-  } else {
-    df.out <- df.out.mo
+for (yr.baseline.end in yr.baseline.end.all){
+  n.val.yr <- round(length(seq(yr.baseline.start, yr.baseline.end))*0.25)
+  for (flux.name in flux.name.all){
+    for (mo in mo.list){
+      
+      df.out.mo <- CalculateClimatePCR(df=df, mo=mo, flux.name=flux.name, var.predictors=var.options,
+                                       yr.baseline.start=yr.baseline.start, yr.baseline.end=yr.baseline.end, n.val.yr=5,
+                                       p.thres=p.thres, cum.var=cum.var, min.var=min.var, 
+                                       neg.allowed=F, write.vars.keep=T, write.PC.keep=T, PC.plot=F, write.perm=F)
+      
+      # combined with other data
+      if (exists("df.out")){
+        df.out <- rbind(df.out, df.out.mo)
+      } else {
+        df.out <- df.out.mo
+      }
+      
+      # status update
+      print(paste0("flux ", flux.name, " year ", yr.baseline.end, " month ", mo, " complete"))
+      
+    }
+    
+    # save output csv
+    write.csv(df.out, paste0(flux.name, "/", yr.baseline.end, "/GHCN_MonthlyRegressions_OutputAll.csv"), row.names=F, quote=F)
+    
+    # fit metric
+    RMSE(subset(df.out, group=="val")$PCR, subset(df.out, group=="val")$flux)
+    NRMSE(subset(df.out, group=="val")$PCR, subset(df.out, group=="val")$flux)
+    NashSutcliffe(subset(df.out, group=="val")$PCR, subset(df.out, group=="val")$flux)
+    R2(subset(df.out, group=="val")$PCR, subset(df.out, group=="val")$flux)
+    
+    rm(df.out)
   }
-  
-  # status update
-  print(paste0("month ", mo, " complete"))
-  
 }
-
-# save output csv
-write.csv(df.out, "GHCN_MonthlyRegressions_OutputAll.csv", row.names=F, quote=F)
-
-# fit metric
-RMSE(subset(df.out, group=="val")$PCR, subset(df.out, group=="val")$flux)
-NRMSE(subset(df.out, group=="val")$PCR, subset(df.out, group=="val")$flux)
-NashSutcliffe(subset(df.out, group=="val")$PCR, subset(df.out, group=="val")$flux)
-R2(subset(df.out, group=="val")$PCR, subset(df.out, group=="val")$flux)

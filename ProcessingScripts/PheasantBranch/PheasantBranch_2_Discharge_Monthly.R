@@ -50,7 +50,6 @@ df.mo <- subset(df.mo, missing/ndaypm<0.10)  # this is NO MONTHS!
 df.mo$discharge.m3 <- df.mo$discharge.cfs.mean*86400*df.mo$ndaypm*(0.3048^3)
 
 ## convert to a depth
-# read in shapefile of upstream watershed
 area.upstream <- (17.08)*(5280*5280)*(0.3048*0.3048)  # [m] contributing area, from USGS: https://waterdata.usgs.gov/nwis/inventory/?site_no=05427948&agency_cd=USGS
 
 # convert discharge to mm
@@ -58,3 +57,32 @@ df.mo$discharge.mm <- 1000*df.mo$discharge.m3/area.upstream
 
 # save parts of interest
 write.csv(df.mo[,c("year", "month", "discharge.mm")], "PheasantBranch_Discharge_Monthly.csv", row.names=F)
+
+## repeat for baseflow, which was separated using the WHAT online tool
+df.Q.d <- read.csv("PheasantBranch_BaseflowSeparation_Daily.csv")   # this is from the WHAT online baseflow separation filter for Pheasant branch
+
+# summarize runoff to mean monthly mm
+df.Q.d$Date <- mdy(df.Q.d$Date)
+df.Q.d$year <- year(df.Q.d$Date)
+df.Q.d$month <- month(df.Q.d$Date)
+df.Q.mo <- dplyr::summarize(group_by(df.Q.d, year, month),
+                            discharge.cfs.mean = mean(discharge.cfs, na.rm=T),
+                            runoff.cfs.mean = mean(runoff.cfs, na.rm=T),
+                            baseflow.cfs.mean = mean(baseflow.cfs, na.rm=T),
+                            missing = sum(is.na(discharge.cfs)))
+
+# for each month, figure out how many days are in that month
+df.Q.mo$ndaypm <- days_in_month(ymd(paste0(df.Q.mo$year, "-", df.Q.mo$month, "-01")))
+
+# convert discharge in cfs to total discharge in cubic meters
+df.Q.mo$discharge.m3 <- df.Q.mo$discharge.cfs.mean*86400*df.Q.mo$ndaypm*(0.3048^3)
+df.Q.mo$runoff.m3 <- df.Q.mo$runoff.cfs.mean*86400*df.Q.mo$ndaypm*(0.3048^3)
+df.Q.mo$baseflow.m3 <- df.Q.mo$baseflow.cfs.mean*86400*df.Q.mo$ndaypm*(0.3048^3)
+
+# convert discharge to mm
+df.Q.mo$discharge.mm <- 1000*df.Q.mo$discharge.m3/area.upstream
+df.Q.mo$runoff.mm <- 1000*df.Q.mo$runoff.m3/area.upstream
+df.Q.mo$baseflow.mm <- 1000*df.Q.mo$baseflow.m3/area.upstream
+
+# save parts of interest
+write.csv(df.Q.mo[,c("year", "month", "discharge.mm", "runoff.mm", "baseflow.mm")], "PheasantBranch_BaseflowSeparation_Monthly.csv", row.names=F)

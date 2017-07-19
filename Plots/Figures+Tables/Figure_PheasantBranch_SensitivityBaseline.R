@@ -16,17 +16,20 @@ source(paste0(git.dir, "ProcessingScripts/FitMetrics.R"))
 path.fig <- paste0(git.dir, "Plots/Figures+Tables/")
 
 # years to plot
-yrs.plot <- seq(1989,1995,1)
+yrs.plot <- seq(1992,1998,1)  # my year +/- 3 years
+
+# name of flux to plot
+flux.name <- "discharge.mm"
 
 # read in data
-df.out <- read.csv(paste0(git.dir, "Data/PheasantBranch/GHCN_SensitivityBaseline_OutputAll.csv"), stringsAsFactors=F)
+df.out <- read.csv(paste0(git.dir, "Data/PheasantBranch/", flux.name, "/GHCN_SensitivityBaseline_OutputAll.csv"), stringsAsFactors=F)
 
 # subset to plot years
 df.out <- subset(df.out, yr.baseline.end %in% yrs.plot)
 
 ## calculate fit metrics by yr.baseline.end
 df.baseline <- dplyr::summarize(group_by(subset(df.out, group != "prediction"), yr.baseline.end, group),
-                                RMSE = RMSE(PCR, flux))
+                                NSE = NashSutcliffe(PCR, flux))
 df.baseline.melt <- melt(df.baseline, id=c("group", "yr.baseline.end"))
 
 ## calculate baseline period discharge
@@ -56,66 +59,126 @@ df.LULCvClimate.baseline <-
                    PCR.sd = sd(PCR.sum),
                    change.overall.mean = mean(change.overall),
                    change.overall.sd = sd(change.overall),
-                   change.climate.mean = mean(change.climate),
-                   change.climate.sd = sd(change.climate),
                    change.LULC.mean = mean(change.LULC),
-                   change.LULC.sd = sd(change.LULC))
+                   change.LULC.sd = sd(change.LULC),
+                   change.climate.mean = mean(change.climate),
+                   change.climate.sd = sd(change.climate))
 
 df.LULCvClimate.prediction <- subset(df.LULCvClimate.baseline, year>max(df.LULCvClimate$yr.baseline.end))
 
-# density plot of LULC and climate effects for prediction period
-p.dens.LULC.baseline <-
-  ggplot(melt(subset(df.LULCvClimate.prediction, select=c("year", "yr.baseline.end", "change.overall.mean", "change.climate.mean", "change.LULC.mean")), 
-              id=c("year", "yr.baseline.end")), 
-         aes(x=value, color=factor(yr.baseline.end))) +
-  geom_vline(xintercept=0, color="gray65") +
-  geom_density() +
-  facet_grid(.~variable, scales="free", 
-             labeller=as_labeller(c("change.overall.mean"="Overall", "change.climate.mean"="Climate", "change.LULC.mean"="LULC"))) +
-  scale_x_continuous(name="Discharge Change from Baseline Period [mm]") +
-  scale_y_continuous(name="Density") +
-  scale_color_discrete(name="End of Baseline Period [year]") +
-  theme_bw() +
-  theme(panel.grid=element_blank(),
-        legend.position="bottom")
+df.LULCvClimate.baseline.melt <- melt(df.LULCvClimate.baseline[,c("year", "yr.baseline.end", "change.overall.mean", "change.LULC.mean", "change.climate.mean")],
+                                      id=c("year", "yr.baseline.end"))
 
 # barplot of fit metrics by group and yr.baseline.end
 p.fit.group.baseline <-
   ggplot(df.baseline.melt, aes(x=yr.baseline.end, y=value, fill=group)) +
+  geom_bar(stat="identity", position="dodge", color="white") +
   geom_hline(yintercept=0, color="gray65") +
-  geom_bar(stat="identity", position="dodge") +
   scale_x_continuous(name="End of Baseline Period [year]", 
                      breaks=seq(min(df.baseline$yr.baseline.end), max(df.baseline$yr.baseline.end))) +
-  scale_y_continuous(name="RMSE [mm]") +
-  theme_bw() +
-  theme(panel.grid=element_blank())
-ggsave(paste0(plot.dir, "GHCN_PheasantBranch_SensitivityBaseline_p.fit.group.baseline.png"),
-       p.fit.group.baseline, width=8, height=6, units="in")
-
-
-
-
-
-p.climate.LULC.hist <-
-  ggplot(subset(df.ann.melt, variable != "change.overall.static.mean")) +
-  geom_vline(xintercept=0, color="gray65") +
-  geom_density(aes(x=value, fill=variable), alpha=0.5, color=NA) +
-  geom_density(data=subset(df.ann.melt, variable=="change.overall.static.mean"), aes(x=value), color="black", fill=NA) +
-  scale_x_continuous(name="Change in Annual Runoff Depth [mm]", expand=c(0,0)) +
-  scale_y_continuous(name="Density", expand=c(0,0)) +
-  scale_fill_manual(name="Driver: ", 
-                    values=c("change.climate.static.mean"="#D01D1D", "change.LULC.static.mean"="#18A718"), 
-                    labels=c("change.climate.static.mean"="Climate", "change.LULC.static.mean"="LULC"), guide=F) +
+  scale_y_continuous(name="NSE [mm]") +
+  scale_fill_manual(values=c("cal"="#ff1d25", "val"="#127D7D"), guide=F) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))
 
+p.change.baseline <- 
+  ggplot(subset(df.LULCvClimate.baseline.melt, variable != "change.overall.mean"), aes(x=year, y=value, color=factor(yr.baseline.end))) +
+  geom_hline(yintercept=0, color="gray65") +
+  geom_line() +
+  geom_line(data=subset(df.LULCvClimate.baseline.melt, variable != "change.overall.mean" & yr.baseline.end==1995), aes(x=year, y=value), color="black") +
+  facet_grid(variable~.,
+             labeller=as_labeller(c("change.climate.mean"="Climate", "change.LULC.mean"="LULC"))) +
+  scale_x_continuous(name="Year", expand=c(0,0)) +
+  scale_y_continuous(name="Change from Baseline Period [mm]") +
+  scale_color_manual(guide=F, values=c("1992"="#8181ffff", "1993"="#5656abff", "1994"="#2d2d59ff", 
+                                         "1995"="white", 
+                                         "1996"="#582a2aff", "1997"="#a50000ff", "1998"="#ff7a7aff")) +
+  theme_bw() +
+  theme(panel.grid=element_blank(),
+        legend.position="bottom",
+        panel.border=element_rect(color="black"))
+
 ## save plots
-pdf(file=paste0(path.fig, "Figure_PheasantBranch_NoText.pdf"), width=(181/25.4), height=(120/25.4))
-grid.arrange(p.val.time+theme(text=element_blank(), plot.margin=unit(c(0.5,6,4,0), "mm")),
-             p.val.box+theme(text=element_blank(), plot.margin=unit(c(0.5,0.5,4,6), "mm")),
-             p.ribbon.static+theme(text=element_blank(), plot.margin=unit(c(4,6,0,0), "mm")),
-             p.climate.LULC.hist+theme(text=element_blank(), plot.margin=unit(c(4,0.5,0,6), "mm")),
-             ncol=2)
+pdf(file=paste0(path.fig, "Figure_PheasantBranch_SensitivityBaseline_NoText.pdf"), width=(82/25.4), height=(120/25.4))
+grid.arrange(p.fit.group.baseline+theme(text=element_blank(), plot.margin=unit(c(0.5,0.5,4,0), "mm")),
+             p.change.baseline+theme(text=element_blank(), plot.margin=unit(c(4,0.5,0,0), "mm")),
+             ncol=1, heights=c(0.25,1))
 dev.off()
 
+
+# comparison of mean LULC and climate effects depending on baseline period end
+df.sig.LULC <- data.frame(year=seq(1992,1998),
+                     yr.1992=NaN,
+                     yr.1993=NaN,
+                     yr.1994=NaN,
+                     yr.1995=NaN,
+                     yr.1996=NaN,
+                     yr.1997=NaN,
+                     yr.1998=NaN)
+df.sig.LULC$yr.1992[df.sig$year==1993] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1992[df.sig$year==1994] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1992[df.sig$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1992[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1992[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1992[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
+
+df.sig.LULC$yr.1993[df.sig$year==1994] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1993[df.sig$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1993[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1993[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1993[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
+
+df.sig.LULC$yr.1994[df.sig$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1994[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1994[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1994[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
+
+df.sig.LULC$yr.1995[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1995[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1995[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
+
+df.sig.LULC$yr.1996[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1996[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
+
+df.sig.LULC$yr.1997[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
+
+df.sig.climate <- data.frame(year=seq(1992,1998),
+                             yr.1992=NaN,
+                             yr.1993=NaN,
+                             yr.1994=NaN,
+                             yr.1995=NaN,
+                             yr.1996=NaN,
+                             yr.1997=NaN,
+                             yr.1998=NaN)
+df.sig.climate$yr.1992[df.sig$year==1993] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean)$p.value
+df.sig.climate$yr.1992[df.sig$year==1994] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean)$p.value
+df.sig.climate$yr.1992[df.sig$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean)$p.value
+df.sig.climate$yr.1992[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean)$p.value
+df.sig.climate$yr.1992[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
+df.sig.climate$yr.1992[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
+
+df.sig.climate$yr.1993[df.sig$year==1994] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean)$p.value
+df.sig.climate$yr.1993[df.sig$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean)$p.value
+df.sig.climate$yr.1993[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean)$p.value
+df.sig.climate$yr.1993[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
+df.sig.climate$yr.1993[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
+
+df.sig.climate$yr.1994[df.sig$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean)$p.value
+df.sig.climate$yr.1994[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean)$p.value
+df.sig.climate$yr.1994[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
+df.sig.climate$yr.1994[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
+
+df.sig.climate$yr.1995[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean)$p.value
+df.sig.climate$yr.1995[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
+df.sig.climate$yr.1995[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
+
+df.sig.climate$yr.1996[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
+df.sig.climate$yr.1996[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
+
+df.sig.climate$yr.1997[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
+
+df.sig.climate.logical <- df.sig.climate<0.05
+df.sig.LULC.logical <- df.sig.LULC<0.05
+df.sig.climate.logical[,1] <- df.sig.climate$year
+df.sig.LULC.logical[,1] <- df.sig.LULC$year
