@@ -65,7 +65,7 @@ yr.baseline.end.all <- seq(1992,1998)  # 7 years: 1995 +/- 3
 n.perm <- 250
 
 # read in discharge and met data frames
-df.met <- read.csv(paste0(git.dir, "Data/PheasantBranch/USW00014837_GHCN_MetData_Monthly.csv"))  # use same met data as McFarland
+df.met <- read.csv(paste0(git.dir, "Data/PheasantBranch/USW00014837_GHCN_Monthly.csv"))  # use same met data as McFarland
 df.Q <- read.csv("PheasantBranch_BaseflowSeparation_Monthly.csv")   # this is from the WHAT online baseflow separation filter for Pheasant branch
 
 # merge data frames, with df.met defining the temporal extent
@@ -232,11 +232,12 @@ for (flux.name in flux.name.all){
   
   for (yr.baseline.end in yr.baseline.end.all){
     # number of years to save for validation
-    n.val.yr <- round(length(seq(yr.baseline.start, yr.baseline.end))*0.25)
+    #n.val.yr <- floor(length(seq(yr.baseline.start, yr.baseline.end))*0.25)
+    n.val.yr <- 5  # use 5 for all baseline periods so that the number of validation years does not cause variability in the results
     for (mo in mo.list){
       
       # run PCR script
-      df.out.mo <- CalculateClimatePCR(df=df, mo=mo, flux.name=flux.name, var.predictors=var.options,
+      df.out.mo <- CalculateClimatePCR(df=df, mo=mo, flux.name=flux.name, var.options=var.options,
                                        yr.baseline.start=yr.baseline.start, yr.baseline.end=yr.baseline.end,
                                        n.perm=n.perm, n.val.yr=n.val.yr, p.thres=p.thres, cum.var=cum.var, min.var=min.var, 
                                        neg.allowed=F, write.vars.keep=F, write.PC.keep=F, PC.plot=F, write.perm=F)

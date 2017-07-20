@@ -1,5 +1,5 @@
-## McFarland_6_ClimateVsLULC.R
-# This script is intended to take the output of McFarland_4_MonthlyRegressions.R and
+## PheasantBranch_5_ClimateVsLULC.R
+# This script is intended to take the output of PheasantBranch_3_MonthlyRegressions.R and
 # separate out the climate and LULC contributions to change since the baseline period
 # at an annual scale.
 

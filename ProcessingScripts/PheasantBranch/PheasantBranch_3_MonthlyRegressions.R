@@ -12,7 +12,7 @@ git.dir <- "C:/Users/Sam/WorkGits/WaterBalance_ClimateVsLULC/"
 # load packages
 source(paste0(git.dir, "ProcessingScripts/PCA_Functions.R"))
 source(paste0(git.dir, "ProcessingScripts/FitMetrics.R"))
-source(paste0(git.dir, "ProcessingScripts/CalculateClimatePCR.R"))
+source(paste0(git.dir, "ProcessingScripts/CalculateClimatePCR.R"))   # this is the script that does most of the work...
 require(ggplot2)
 require(tidyr)
 require(WVPlots)  # devtools::install_github('WinVector/WVPlots',build_vignettes=TRUE)
@@ -63,7 +63,7 @@ yr.baseline.end.all <- c(1992, 1995)
 flux.name.all <- c("discharge.mm", "runoff.mm", "baseflow.mm")
 
 # read in discharge and met data frames
-df.met <- read.csv(paste0(git.dir, "Data/PheasantBranch/USW00014837_GHCN_MetData_Monthly.csv"))  # use same met data as McFarland
+df.met <- read.csv(paste0(git.dir, "Data/PheasantBranch/USW00014837_GHCN_Monthly.csv"))  # use same met data as McFarland
 df.Q <- read.csv("PheasantBranch_BaseflowSeparation_Monthly.csv")   # this is from the WHAT online baseflow separation filter for Pheasant branch
 
 # merge data frames, with df.met defining the temporal extent
@@ -224,16 +224,16 @@ df.summary <- data.frame(month = numeric(0),
 # list of months
 mo.list <- seq(1,12)
 for (yr.baseline.end in yr.baseline.end.all){
-  n.val.yr <- round(length(seq(yr.baseline.start, yr.baseline.end))*0.25)
+  n.val.yr <- floor(length(seq(yr.baseline.start, yr.baseline.end))*0.25)
   for (flux.name in flux.name.all){
     for (mo in mo.list){
       
-      df.out.mo <- CalculateClimatePCR(df=df, mo=mo, flux.name=flux.name, var.predictors=var.options,
-                                       yr.baseline.start=yr.baseline.start, yr.baseline.end=yr.baseline.end, n.val.yr=5,
+      df.out.mo <- CalculateClimatePCR(df=df, mo=mo, flux.name=flux.name, var.options=var.options,
+                                       yr.baseline.start=yr.baseline.start, yr.baseline.end=yr.baseline.end, n.val.yr=n.val.yr,
                                        p.thres=p.thres, cum.var=cum.var, min.var=min.var, 
                                        neg.allowed=F, write.vars.keep=T, write.PC.keep=T, PC.plot=F, write.perm=F)
       
-      # combined with other data
+      # combine with other data
       if (exists("df.out")){
         df.out <- rbind(df.out, df.out.mo)
       } else {
@@ -244,6 +244,10 @@ for (yr.baseline.end in yr.baseline.end.all){
       print(paste0("flux ", flux.name, " year ", yr.baseline.end, " month ", mo, " complete"))
       
     }
+    
+    # move CSV output from CalculateClimatePCR script
+    files <- list.files(paste0(git.dir, "Data/PheasantBranch/"), pattern="GHCN_MonthlyRegressions_.")
+    file.rename(paste0(git.dir, "Data/PheasantBranch/", files), paste0(git.dir, "Data/PheasantBranch/", flux.name, "/", yr.baseline.end, "/", files))
     
     # save output csv
     write.csv(df.out, paste0(flux.name, "/", yr.baseline.end, "/GHCN_MonthlyRegressions_OutputAll.csv"), row.names=F, quote=F)

@@ -92,8 +92,8 @@ p.change.baseline <-
   scale_x_continuous(name="Year", expand=c(0,0)) +
   scale_y_continuous(name="Change from Baseline Period [mm]") +
   scale_color_manual(guide=F, values=c("1992"="#8181ffff", "1993"="#5656abff", "1994"="#2d2d59ff", 
-                                         "1995"="white", 
-                                         "1996"="#582a2aff", "1997"="#a50000ff", "1998"="#ff7a7aff")) +
+                                       "1995"="white", 
+                                       "1996"="#582a2aff", "1997"="#a50000ff", "1998"="#ff7a7aff")) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         legend.position="bottom",
@@ -109,13 +109,13 @@ dev.off()
 
 # comparison of mean LULC and climate effects depending on baseline period end
 df.sig.LULC <- data.frame(year=seq(1992,1998),
-                     yr.1992=NaN,
-                     yr.1993=NaN,
-                     yr.1994=NaN,
-                     yr.1995=NaN,
-                     yr.1996=NaN,
-                     yr.1997=NaN,
-                     yr.1998=NaN)
+                          yr.1992=NaN,
+                          yr.1993=NaN,
+                          yr.1994=NaN,
+                          yr.1995=NaN,
+                          yr.1996=NaN,
+                          yr.1997=NaN,
+                          yr.1998=NaN)
 df.sig.LULC$yr.1992[df.sig$year==1993] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean)$p.value
 df.sig.LULC$yr.1992[df.sig$year==1994] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean)$p.value
 df.sig.LULC$yr.1992[df.sig$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean)$p.value

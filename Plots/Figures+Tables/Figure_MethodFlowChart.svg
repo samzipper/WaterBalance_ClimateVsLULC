@@ -439,9 +439,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.55"
-     inkscape:cx="338.65425"
-     inkscape:cy="108.52962"
+     inkscape:zoom="1.5507368"
+     inkscape:cx="383.54547"
+     inkscape:cy="157.56772"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -462,7 +462,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -472,14 +472,14 @@
      id="layer1"
      transform="translate(0,-693.97528)">
     <rect
-       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:1.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:#ff1d25;fill-opacity:1;stroke:none;stroke-width:1.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect12177-8"
        width="673.22833"
        height="47.741936"
        x="0"
        y="693.97528" />
     <rect
-       style="opacity:1;fill:#0000ff;fill-opacity:1;stroke:none;stroke-width:1.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:#127d7d;fill-opacity:1;stroke:none;stroke-width:1.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect12177"
        width="396.12903"
        height="101.29032"
@@ -901,19 +901,19 @@
            sodipodi:role="line">for calibration/validation</tspan></text>
     </g>
     <g
-       id="g9593"
-       transform="translate(2,-32.015009)">
+       id="g4557"
+       transform="translate(4,0)">
       <rect
          ry="5"
          rx="5"
-         y="897.5152"
-         x="250.63681"
-         height="29.694141"
-         width="175.50058"
+         y="865.51892"
+         x="246.97813"
+         height="29.656618"
+         width="186.4308"
          id="rect8361-6-9-1"
-         style="opacity:1;fill:#fffccf;fill-opacity:1;stroke:#000000;stroke-width:1.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+         style="opacity:1;fill:#fffccf;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <g
-         transform="translate(-238.07133,80.000086)"
+         transform="translate(-236.2649,47.985047)"
          id="g4693">
         <text
            xml:space="preserve"
@@ -926,7 +926,7 @@
              x="576.35101"
              y="827.93878"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle"
-             id="tspan4509-8-7-4">Calculate change due to LULC {Eq. 4}</tspan></text>
+             id="tspan4509-8-7-4">Calculate change due to land use {Eq. 4}</tspan></text>
         <g
            id="g4677"
            transform="translate(2.2439575,0)">
@@ -934,43 +934,26 @@
              sodipodi:linespacing="125%"
              id="text4136-2-5-3-4"
              y="840.48749"
-             x="512.99762"
+             x="507.5769"
              style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              xml:space="preserve"><tspan
                style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial"
                y="840.48749"
-               x="512.99762"
+               x="507.5769"
                id="tspan4138-4-7-0-7"
-               sodipodi:role="line">HF<tspan
+               sodipodi:role="line">ΔHF<tspan
    id="tspan4637"
-   style="font-size:7.5px;baseline-shift:sub">LULC,m,y</tspan> = HF<tspan
+   style="font-size:7.5px;baseline-shift:sub">LU,m,y</tspan> = HF<tspan
    id="tspan4596-8"
    style="font-size:7.5px;baseline-shift:sub">m,y</tspan> - HF<tspan
    id="tspan4600-3"
    style="font-size:7.5px;baseline-shift:sub">PCR,m,y</tspan></tspan></text>
-          <path
-             transform="matrix(0.74574407,0,0,0.77499996,305.74692,205.84897)"
-             inkscape:transform-center-y="-1.5000061"
-             d="m 266.4516,808.49128 3.35236,5.80645 3.35235,5.80645 -6.70471,0 -6.70471,0 3.35235,-5.80645 z"
-             inkscape:randomized="0"
-             inkscape:rounded="0"
-             inkscape:flatsided="false"
-             sodipodi:arg2="-0.52359878"
-             sodipodi:arg1="-1.5707963"
-             sodipodi:r2="3.8709676"
-             sodipodi:r1="7.7419357"
-             sodipodi:cy="816.23322"
-             sodipodi:cx="266.4516"
-             sodipodi:sides="3"
-             id="path4472-5"
-             style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.59799999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-             sodipodi:type="star" />
         </g>
       </g>
     </g>
     <g
        id="g9606"
-       transform="translate(2,-32.59566)">
+       transform="translate(6,-32.59566)">
       <rect
          ry="5"
          rx="5"
@@ -1001,37 +984,20 @@
              sodipodi:linespacing="125%"
              id="text4136-2-5-3"
              y="887.58429"
-             x="499.45593"
+             x="490.24426"
              style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              xml:space="preserve"><tspan
                style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial"
                y="887.58429"
-               x="499.45593"
+               x="490.24426"
                id="tspan4138-4-7-0"
-               sodipodi:role="line">HF<tspan
+               sodipodi:role="line">ΔHF<tspan
    id="tspan4563-0"
    style="font-size:7.5px;baseline-shift:sub">climate,m,y</tspan> = HF<tspan
    id="tspan4596"
    style="font-size:7.5px;baseline-shift:sub">m,y</tspan> - HF<tspan
    id="tspan4600"
    style="font-size:7.5px;baseline-shift:sub">m,baseline</tspan></tspan></text>
-          <path
-             transform="matrix(0.74574407,0,0,0.77499996,294.19852,253.01027)"
-             inkscape:transform-center-y="-1.5000061"
-             d="m 266.4516,808.49128 3.35236,5.80645 3.35235,5.80645 -6.70471,0 -6.70471,0 3.35235,-5.80645 z"
-             inkscape:randomized="0"
-             inkscape:rounded="0"
-             inkscape:flatsided="false"
-             sodipodi:arg2="-0.52359878"
-             sodipodi:arg1="-1.5707963"
-             sodipodi:r2="3.8709676"
-             sodipodi:r1="7.7419357"
-             sodipodi:cy="816.23322"
-             sodipodi:cx="266.4516"
-             sodipodi:sides="3"
-             id="path4472-5-3"
-             style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.59799999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-             sodipodi:type="star" />
         </g>
       </g>
     </g>
@@ -1200,37 +1166,20 @@
              sodipodi:linespacing="125%"
              id="text4294-94-7"
              y="817.30084"
-             x="290.9223"
+             x="281.00757"
              style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              xml:space="preserve"><tspan
                style="font-style:italic"
                y="817.30084"
-               x="290.9223"
+               x="281.00757"
                id="tspan4296-66-9"
-               sodipodi:role="line">HF<tspan
+               sodipodi:role="line">ΔHF<tspan
    id="tspan4635"
    style="font-size:7.5px;baseline-shift:sub">Total,m,y</tspan> = HF<tspan
    id="tspan4460"
    style="font-size:7.5px;baseline-shift:sub">m,y</tspan> - HF<tspan
    id="tspan4298-28-8"
    style="font-size:7.5px;baseline-shift:sub">m,baseline</tspan></tspan></text>
-          <path
-             transform="matrix(0.74574407,0,0,0.77499996,84.751861,183.23315)"
-             inkscape:transform-center-y="-1.5000061"
-             d="m 266.4516,808.49128 3.35236,5.80645 3.35235,5.80645 -6.70471,0 -6.70471,0 3.35235,-5.80645 z"
-             inkscape:randomized="0"
-             inkscape:rounded="0"
-             inkscape:flatsided="false"
-             sodipodi:arg2="-0.52359878"
-             sodipodi:arg1="-1.5707963"
-             sodipodi:r2="3.8709676"
-             sodipodi:r1="7.7419357"
-             sodipodi:cy="816.23322"
-             sodipodi:cx="266.4516"
-             sodipodi:sides="3"
-             id="path4472"
-             style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.59799999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-             sodipodi:type="star" />
         </g>
       </g>
     </g>
@@ -1375,7 +1324,7 @@
        sodipodi:nodetypes="cc" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker12693)"
-       d="m 444.51613,880.34726 -11.84675,0"
+       d="m 449.80645,880.34726 -8.86044,0"
        id="path12685"
        inkscape:connector-curvature="0" />
     <path

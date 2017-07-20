@@ -43,7 +43,7 @@ df.val.mean.yr <- dplyr::summarize(group_by(df.val.mean, year),
 avg.years <- 11
 
 # read in data
-df.Q <- read.csv("PheasantBranch_BaseflowSeparation_Monthly.csv")
+df.Q <- read.csv(paste0(git.dir, "Data/PheasantBranch/PheasantBranch_BaseflowSeparation_Monthly.csv"))
 
 # make column for flux of interest
 colnames(df.Q)[colnames(df.Q)==flux.name] <- "flux.mm"
@@ -98,19 +98,22 @@ df.ann$change.LULC.static.max <- df.ann$change.LULC.static.mean + df.ann$change.
 df.ann.melt <- melt(df.ann[,c("year", "change.overall.static.mean", "change.climate.static.mean", "change.LULC.static.mean")], id="year")
 df.ann.melt <- subset(df.ann.melt, year>yr.baseline.end)
 
+df.perm.ann.melt <- melt(df.perm.ann[,c("year", "change.overall.static", "change.climate.static", "change.LULC.static")], id="year")
+df.perm.ann.melt <- subset(df.perm.ann.melt, year>yr.baseline.end)
+
 #### MAKE PLOTS
 ## validation plots
 # statistics
 val.R2 <- R2(df.val$PCR, df.val$flux)
 val.RMSE <- RMSE(df.val$PCR, df.val$flux)
 val.NRMSE <- NRMSE(df.val$PCR, df.val$flux)
-val.NSE <- NashSutcliffe(df.val$PCR, df.val$flux)
+val.NSE <- round(NashSutcliffe(df.val$PCR, df.val$flux), 3)
 val.NSE.mean <- NashSutcliffe(df.val.mean$PCR.mean, df.val.mean$obs.mean)
 
 val.yr.R2 <- R2(df.val.mean.yr$PCR, df.val.mean.yr$obs)
 val.yr.RMSE <- RMSE(df.val.mean.yr$PCR, df.val.mean.yr$obs)
 val.yr.NRMSE <- NRMSE(df.val.mean.yr$PCR, df.val.mean.yr$obs)
-val.yr.NSE <- NashSutcliffe(df.val.mean.yr$PCR, df.val.mean.yr$obs)
+val.yr.NSE <- round(NashSutcliffe(df.val.mean.yr$PCR, df.val.mean.yr$obs), 3)
 
 # timeseries
 p.val.time <- 
@@ -131,7 +134,7 @@ p.val.box <-
   geom_hline(yintercept=0, color="gray65") +
   geom_boxplot(outlier.shape=1, outlier.fill=NULL) +
   scale_x_discrete(name="Month") +
-  scale_y_continuous(name="Discharge [mm]", limits=c(0,75), breaks=seq(0,75,15)) +
+  scale_y_continuous(name="Discharge [mm]", limits=c(0,77.5), breaks=seq(0,75,15)) +
   scale_fill_manual(name="Source", labels=c("obs"="Obs.", "PCR"="PCR"), 
                       values=c("obs"="white", "PCR"="#127D7D"), guide=F) +
   theme_bw() +
@@ -185,14 +188,6 @@ p.ribbon.static <-
   geom_line(aes(y=change.overall.static.mean), color="black") +
   geom_ribbon(aes(ymin=change.climate.static.min, ymax=change.climate.static.max), fill="#D01D1D", alpha=0.5) +
   geom_ribbon(aes(ymin=change.LULC.static.min, ymax=change.LULC.static.max), fill="#18A718", alpha=0.5) +
-  # stat_smooth(data=subset(df.ann, year<=yr.baseline.end), aes(y=change.climate.static.mean), 
-  #             color="#D01D1D", method="lm", se=F, linetype="31") +
-  # stat_smooth(data=subset(df.ann, year<=yr.baseline.end), aes(y=change.LULC.static.mean), 
-  #             color="#18A718", method="lm", se=F, linetype="31") +
-  # stat_smooth(data=subset(df.ann, year>yr.baseline.end), aes(y=change.climate.static.mean), 
-  #             color="#D01D1D", method="lm", se=F, linetype="31") +
-  # stat_smooth(data=subset(df.ann, year>yr.baseline.end), aes(y=change.LULC.static.mean), 
-  #             color="#18A718", method="lm", se=F, linetype="31") +
   scale_x_continuous(name="Year", expand=c(0,0)) +
   scale_y_continuous(name="Change from Baseline Period [mm]", breaks=seq(-50,150,50)) +
   theme_bw() +
@@ -237,8 +232,6 @@ p.urb <-
 summary(lm(urb.prc ~ year, data=df.urb))  # urban LULC % trend
 coef(lm(change.LULC.static.mean ~ year, data=subset(df.ann, year>=1996)))[2]/coef(lm(urb.prc ~ year, data=df.urb))[2]
 
-
-
 ## save plots
 pdf(file=paste0(path.fig, "Figure_PheasantBranch_CalVal_Discharge_NoText.pdf"), width=(181/25.4), height=(120/25.4))
 grid.arrange(
@@ -250,11 +243,5 @@ grid.arrange(
              p.climate.LULC.hist+theme(text=element_blank(), plot.margin=unit(c(4,0,0,6), "mm")),
              ncol=1),
   ncol=2)
-# grid.arrange(p.val.time+theme(text=element_blank(), plot.margin=unit(c(0.5,6,4,0), "mm")),
-#              p.val.box+theme(text=element_blank(), plot.margin=unit(c(0.5,0.5,4,6), "mm")),
-#              p.ribbon.static+theme(text=element_blank(), plot.margin=unit(c(4,6,0,0), "mm")),
-#              p.climate.LULC.hist+theme(text=element_blank(), plot.margin=unit(c(4,0.5,0,6), "mm")),
-#              p.urb+theme(text=element_blank(), plot.margin=unit(c(8,6,0,0), "mm")),
-#              ncol=2)
 dev.off()
 

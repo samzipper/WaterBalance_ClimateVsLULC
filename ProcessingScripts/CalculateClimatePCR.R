@@ -1,7 +1,8 @@
-CalculateClimatePCR <- function(df, mo, flux.name, var.predictors, 
+CalculateClimatePCR <- function(df, mo, flux.name, var.options, 
                                 yr.baseline.start, yr.baseline.end, n.val.yr,
                                 p.thres=0.10, cum.var=0.80, min.var=0.01, n.perm=250, seed=1,
-                                neg.allowed=F,  write.vars.keep=T, write.PC.keep=T, PC.plot=F, write.perm=T){
+                                neg.allowed=F,  write.vars.keep=T, write.PC.keep=T, write.perm=T,
+                                PC.plot=F, plot.dir=NULL){
   #' This script is intended to use principal components regression (PCR) to 
   #' build statistical relationships between meteorological variables and a
   #' hydrological flux of interest.
@@ -10,7 +11,7 @@ CalculateClimatePCR <- function(df, mo, flux.name, var.predictors,
   #'  -df                = data frame with input data (described below)
   #'  -mo                = month you want to build PCR for [numeric]
   #'  -flux.name         = name of column containing flux of interest [character]
-  #'  -var.predictors    = name of candidate predictor variables [character vector]
+  #'  -var.options       = name of candidate predictor variables [character vector]
   #'  
   #'  -yr.baseline.start = start year of baseline period (inclusive) [numeric]
   #'  -yr.baseline.end   = end year of baseline period (inclusive) [numeric]
@@ -25,14 +26,15 @@ CalculateClimatePCR <- function(df, mo, flux.name, var.predictors,
   #'  -neg.allowed       = are negative predictions allowed? [logical] - should be F for streamflow and ET, T for drainage
   #'  -write.vars.keep   = write out vars retained? [logical]
   #'  -write.PC.keep     = write out retained principal components? [logical]
-  #'  -PC.plot           = save plots showing principal component loading? [logical]
   #'  -write.perm        = write out permutation results? [logical]
+  #'  -PC.plot           = save plots showing principal component loading? [logical]
+  #'  -plot.dir          = path to save plots
   #' 
   #' df is a data frame containing the following columns:
   #'  -year
   #'  -month
   #'  -[flux.name] = hydrological flux of interest
-  #'  -[var.predictors] = one column for each candidate predictor variable
+  #'  -[var.options] = one column for each candidate predictor variable
   #'  All other columns will be ignored.
   #'  
   #' output returned is:
@@ -92,6 +94,11 @@ CalculateClimatePCR <- function(df, mo, flux.name, var.predictors,
         vars.keep <- c(vars.keep, v)
       }
     }
+  }
+  
+  # report error is <= 1 var retained
+  if (length(vars.keep)<=1){
+    stop(paste0(flux.name, " mo ", mo, ": <= 1 var retained (", vars.keep, ")"))
   }
   
   # write out variables to retain
