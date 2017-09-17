@@ -7,7 +7,6 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="90mm"
@@ -18,26 +17,10 @@
    inkscape:version="0.91 r13725"
    sodipodi:docname="Figure_PheasantBranch_SensitivityBaseline.svg"
    inkscape:export-filename="C:\Users\Sam\WorkGits\WaterBalance_ClimateVsLULC\Plots\Figures+Tables\Figure_PheasantBranch_SensitivityBaseline.png"
-   inkscape:export-xdpi="500"
-   inkscape:export-ydpi="500">
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300">
   <defs
      id="defs4">
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient11183">
-      <stop
-         style="stop-color:#8181ff;stop-opacity:1"
-         offset="0"
-         id="stop11185" />
-      <stop
-         id="stop11191"
-         offset="0.5"
-         style="stop-color:#000000;stop-opacity:1" />
-      <stop
-         style="stop-color:#ff7a7a;stop-opacity:1"
-         offset="1"
-         id="stop11187" />
-    </linearGradient>
     <marker
        inkscape:stockid="Arrow2Mend"
        orient="auto"
@@ -2130,16 +2113,6 @@
          id="path10593"
          d="m 225.35,2.74 0,0 0,126.28 0,0 0,-126.28 z" />
     </clipPath>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient11183"
-       id="linearGradient11189"
-       x1="-356.37421"
-       y1="-109.3828"
-       x2="-41.649017"
-       y2="-109.3828"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.54786744,0,0,0.21755887,216.58064,-92.266455)" />
     <clipPath
        id="clipPath11266"
        clipPathUnits="userSpaceOnUse">
@@ -2589,8 +2562,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.87"
-     inkscape:cx="114.0091"
-     inkscape:cy="239.57237"
+     inkscape:cx="175.55063"
+     inkscape:cy="282.35312"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -3571,102 +3544,106 @@
          x="-6.7117081"
          y="-11.655625"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle">-50</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#8181ff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="21.877544"
-       y="-103.21177"
-       id="text5860-6-3-2-7-41-2-91-8-1-90-2"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan5862-6-6-1-5-23-4-3-8-10-79-2"
+    <g
+       id="g5086"
+       transform="translate(100.04277,-12.119145)">
+      <text
+         sodipodi:linespacing="125%"
+         id="text5860-6-3-2-7-41-2-91-8-1-90-2"
+         y="-110.16365"
          x="21.877544"
-         y="-103.21177"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#8181ff;fill-opacity:1">1992</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#5656ab;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="50.263924"
-       y="-103.21177"
-       id="text5860-6-3-2-7-41-2-91-8-1-48-4"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan5862-6-6-1-5-23-4-3-8-10-31-5"
-         x="50.263924"
-         y="-103.21177"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#5656ab;fill-opacity:1">1993</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#2d2d59;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="78.701576"
-       y="-103.21177"
-       id="text5860-6-3-2-7-41-2-91-8-1-86-8"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan5862-6-6-1-5-23-4-3-8-10-4-8"
-         x="78.701576"
-         y="-103.21177"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#2d2d59;fill-opacity:1">1994</tspan></text>
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#8181ff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#8181ff;fill-opacity:1"
+           y="-110.16365"
+           x="21.877544"
+           id="tspan5862-6-6-1-5-23-4-3-8-10-79-2"
+           sodipodi:role="line">1992</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text5860-6-3-2-7-41-2-91-8-1-48-4"
+         y="-110.16365"
+         x="47.59726"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#5656ab;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#5656ab;fill-opacity:1"
+           y="-110.16365"
+           x="47.59726"
+           id="tspan5862-6-6-1-5-23-4-3-8-10-31-5"
+           sodipodi:role="line">1993</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text5860-6-3-2-7-41-2-91-8-1-86-8"
+         y="-110.16365"
+         x="73.36824"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#2d2d59;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#2d2d59;fill-opacity:1"
+           y="-110.16365"
+           x="73.36824"
+           id="tspan5862-6-6-1-5-23-4-3-8-10-4-8"
+           sodipodi:role="line">1994</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text5860-6-3-2-7-41-2-91-8-1-7-7"
+         y="-110.16365"
+         x="99.083061"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle"
+           y="-110.16365"
+           x="99.083061"
+           id="tspan5862-6-6-1-5-23-4-3-8-10-3-2"
+           sodipodi:role="line">1995</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text5860-6-3-2-7-41-2-91-8-1-6-1"
+         y="-110.16365"
+         x="124.86868"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#582a2a;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#582a2a;fill-opacity:1"
+           y="-110.16365"
+           x="124.86868"
+           id="tspan5862-6-6-1-5-23-4-3-8-10-2-6"
+           sodipodi:role="line">1996</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text5860-6-3-2-7-41-2-91-8-1-9-3"
+         y="-110.16365"
+         x="150.62259"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#a50000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#a50000;fill-opacity:1"
+           y="-110.16365"
+           x="150.62259"
+           id="tspan5862-6-6-1-5-23-4-3-8-10-1-8"
+           sodipodi:role="line">1997</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text5860-6-3-2-7-41-2-91-8-1-4-3"
+         y="-110.16365"
+         x="176.37158"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ff7a7a;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#ff7a7a;fill-opacity:1"
+           y="-110.16365"
+           x="176.37158"
+           id="tspan5862-6-6-1-5-23-4-3-8-10-7-0"
+           sodipodi:role="line">1998</tspan></text>
+    </g>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="107.08307"
-       y="-103.21177"
-       id="text5860-6-3-2-7-41-2-91-8-1-7-7"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan5862-6-6-1-5-23-4-3-8-10-3-2"
-         x="107.08307"
-         y="-103.21177"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle">1995</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#582a2a;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="135.53535"
-       y="-103.21177"
-       id="text5860-6-3-2-7-41-2-91-8-1-6-1"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan5862-6-6-1-5-23-4-3-8-10-2-6"
-         x="135.53535"
-         y="-103.21177"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#582a2a;fill-opacity:1">1996</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#a50000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="163.9559"
-       y="-103.21177"
-       id="text5860-6-3-2-7-41-2-91-8-1-9-3"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan5862-6-6-1-5-23-4-3-8-10-1-8"
-         x="163.9559"
-         y="-103.21177"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#a50000;fill-opacity:1">1997</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ff7a7a;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="192.37158"
-       y="-103.21177"
-       id="text5860-6-3-2-7-41-2-91-8-1-4-3"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan5862-6-6-1-5-23-4-3-8-10-7-0"
-         x="192.37158"
-         y="-103.21177"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#ff7a7a;fill-opacity:1">1998</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="106.86831"
-       y="-122.13178"
+       x="58.907749"
+       y="-122.29257"
        id="text5860-3-0-2-4-8-7-5"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan5862-0-8-8-0-7-9-4"
-         x="106.86831"
-         y="-122.13178"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle">Baseline Period End Year</tspan></text>
+         x="58.907749"
+         y="-122.29257"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle">Baseline Period End:</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -3693,13 +3670,6 @@
          x="221.18259"
          y="47.503654"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle">Validation</tspan></text>
-    <rect
-       style="opacity:1;fill:url(#linearGradient11189);fill-opacity:1;stroke:none;stroke-width:0.59799999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       id="rect11181"
-       width="171.74286"
-       height="6.32618"
-       x="21.677221"
-       y="-119.22674" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"

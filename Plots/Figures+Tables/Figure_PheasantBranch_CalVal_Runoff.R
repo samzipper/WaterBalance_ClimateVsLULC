@@ -10,6 +10,7 @@ require(ggplot2)
 require(dplyr)
 require(lubridate)
 require(reshape2)
+require(gridExtra)
 source(paste0(git.dir, "ProcessingScripts/FitMetrics.R"))
 
 # path to save figure output
@@ -118,7 +119,7 @@ p.val.time <-
   geom_hline(yintercept=0, color="gray65") +
   geom_line() +
   scale_x_date(name="Date", expand=c(0,0)) +
-  scale_y_continuous(name="Discharge [mm]", limits=c(0,42.2), breaks=seq(0,40,10)) +
+  scale_y_continuous(name="Runoff [mm]", limits=c(0,66.2), breaks=seq(0,60,15)) +     # limits based on Figure_PheasantBranch-AgroIBIS_Runoff
   scale_color_manual(name="Source", labels=c("obs.mean"="Obs.", "PCR.mean"="PCR"),
                        values=c("obs.mean"="black", "PCR.mean"="#127D7D"), guide=F) +
   theme_bw() +
@@ -131,7 +132,7 @@ p.val.box <-
   geom_hline(yintercept=0, color="gray65") +
   geom_boxplot(outlier.shape=1, outlier.fill=NULL) +
   scale_x_discrete(name="Month") +
-  scale_y_continuous(name="Discharge [mm]", limits=c(0,45), breaks=seq(0,45,15)) +
+  scale_y_continuous(name="Discharge [mm]", limits=c(0,66.2), breaks=seq(0,60,15)) +
   scale_fill_manual(name="Source", labels=c("obs"="Obs.", "PCR"="PCR"), 
                       values=c("obs"="white", "PCR"="#127D7D"), guide=F) +
   theme_bw() +
@@ -195,7 +196,7 @@ p.climate.LULC.hist <-
   geom_vline(xintercept=0, color="gray65") +
   geom_density(aes(x=value, fill=variable), alpha=0.5, color=NA) +
   geom_density(data=subset(df.ann.melt, variable=="change.overall.static.mean"), aes(x=value), color="black", fill=NA) +
-  scale_x_continuous(name="Change in Annual Runoff Depth [mm]", expand=c(0,0), breaks=seq(-30,60,30)) +
+  scale_x_continuous(name="Change in Annual Runoff Depth [mm]", expand=c(0,0), breaks=seq(-30,90,30), limits=c(-30.21, 117.55)) +   # from Figure_PheasantBranch-AgroIBIS_Runoff
   scale_y_continuous(name="Density", expand=c(0,0)) +
   scale_fill_manual(name="Driver: ", 
                     values=c("change.climate.static.mean"="#D01D1D", "change.LULC.static.mean"="#18A718"), 

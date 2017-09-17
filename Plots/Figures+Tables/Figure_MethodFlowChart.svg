@@ -17,8 +17,8 @@
    inkscape:version="0.91 r13725"
    sodipodi:docname="Figure_MethodFlowChart.svg"
    inkscape:export-filename="C:\Users\Sam\WorkGits\WaterBalance_ClimateVsLULC\Plots\Figures+Tables\Figure_MethodFlowChart.png"
-   inkscape:export-xdpi="500"
-   inkscape:export-ydpi="500">
+   inkscape:export-xdpi="299.87106"
+   inkscape:export-ydpi="299.87106">
   <defs
      id="defs4">
     <marker
@@ -440,14 +440,14 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.5507368"
-     inkscape:cx="383.54547"
+     inkscape:cx="274.88744"
      inkscape:cy="157.56772"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1536"
-     inkscape:window-height="801"
-     inkscape:window-x="-8"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      fit-margin-top="0"
@@ -984,18 +984,18 @@
              sodipodi:linespacing="125%"
              id="text4136-2-5-3"
              y="887.58429"
-             x="490.24426"
+             x="481.27942"
              style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              xml:space="preserve"><tspan
                style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial"
                y="887.58429"
-               x="490.24426"
+               x="481.27942"
                id="tspan4138-4-7-0"
                sodipodi:role="line">ΔHF<tspan
    id="tspan4563-0"
    style="font-size:7.5px;baseline-shift:sub">climate,m,y</tspan> = HF<tspan
-   id="tspan4596"
-   style="font-size:7.5px;baseline-shift:sub">m,y</tspan> - HF<tspan
+   style="font-size:7.5px;baseline-shift:sub"
+   id="tspan4763">PCR,m,y</tspan> - HF<tspan
    id="tspan4600"
    style="font-size:7.5px;baseline-shift:sub">m,baseline</tspan></tspan></text>
         </g>
@@ -1048,14 +1048,14 @@
        id="g9619"
        transform="translate(-18,-32)">
       <rect
-         ry="5"
-         rx="5"
-         y="993.91614"
-         x="309.94104"
-         height="46.569584"
-         width="232.37602"
+         ry="4.995852"
+         rx="5.3182993"
+         y="993.93549"
+         x="303.51181"
+         height="46.530949"
+         width="247.16904"
          id="rect8361-6-9-3-6"
-         style="opacity:1;fill:#fffccf;fill-opacity:1;stroke:#000000;stroke-width:1.25;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+         style="opacity:1;fill:#fffccf;fill-opacity:1;stroke:#000000;stroke-width:1.28863871;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <g
          transform="translate(-18.744942,44.838686)"
          id="g4739">
@@ -1079,15 +1079,15 @@
         <text
            xml:space="preserve"
            style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           x="334.5737"
+           x="325.42624"
            y="987.89447"
            id="text4294-8-1"
            sodipodi:linespacing="125%"><tspan
              sodipodi:role="line"
-             id="tspan4296-6-4"
-             x="334.5737"
+             x="325.42624"
              y="987.89447"
-             style="font-style:italic">HF<tspan
+             style="font-style:italic"
+             id="tspan4573">HF<tspan
    style="font-size:7.5px;baseline-shift:sub"
    id="tspan4298-2-2">m,y</tspan> = C<tspan
    style="font-size:7.5px;baseline-shift:sub"
@@ -1099,7 +1099,7 @@
    style="font-size:7.5px;baseline-shift:sub"
    id="tspan4735"> n</tspan>*PC<tspan
    style="font-size:7.5px;baseline-shift:sub"
-   id="tspan4733">n,m,y</tspan></tspan></text>
+   id="tspan4733">n,m,y</tspan> + ε</tspan></text>
       </g>
     </g>
     <g
@@ -1306,13 +1306,13 @@
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker11705)"
-       d="m 256.12904,942.03964 c 5.53394,15.54132 14.72428,27.42625 32.25806,30.96774"
+       d="m 256.17681,941.86629 c 4.50245,15.70268 11.97979,27.71101 26.24542,31.28927"
        id="path11697"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker11975)"
-       d="m 524.51613,975.58802 c 9.56915,-9.26536 14.30089,-19.33695 13.54839,-30.32258"
+       d="m 532.48348,976.64181 c 5.96275,-9.49242 8.9112,-19.81082 8.4423,-31.06566"
        id="path11967"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />

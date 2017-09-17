@@ -10,6 +10,7 @@ require(ggplot2)
 require(dplyr)
 require(lubridate)
 require(reshape2)
+require(gridExtra)
 source(paste0(git.dir, "ProcessingScripts/FitMetrics.R"))
 
 # path to save figure output
@@ -153,7 +154,7 @@ p.climate.LULC.hist <-
   geom_vline(xintercept=0, color="gray65") +
   geom_density(aes(x=value, fill=variable), alpha=0.5, color=NA) +
   geom_density(data=subset(df.ann.melt, variable=="change.overall.mean"), aes(x=value), color="black", fill=NA) +
-  scale_x_continuous(name="Change in Annual Runoff Depth [mm]", expand=c(0,0), breaks=seq(-30,90,30)) +
+  scale_x_continuous(name="Change in Annual Runoff Depth [mm]", expand=c(0,0), breaks=seq(-30,90,30), limits=c(-30.21, 117.55)) +
   scale_y_continuous(name="Density", expand=c(0,0)) +
   scale_fill_manual(name="Driver: ", 
                     values=c("change.climate.mean"="#D01D1D", "change.LULC.mean"="#18A718"), 

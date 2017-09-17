@@ -17,8 +17,8 @@
    inkscape:version="0.91 r13725"
    sodipodi:docname="Figure_Yahara_ClimateVsLULC_Density.svg"
    inkscape:export-filename="C:\Users\Sam\WorkGits\WaterBalance_ClimateVsLULC\Plots\Figures+Tables\Figure_Yahara_ClimateVsLULC_Density.png"
-   inkscape:export-xdpi="500"
-   inkscape:export-ydpi="500">
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300">
   <defs
      id="defs4">
     <marker
@@ -25074,14 +25074,14 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.56"
-     inkscape:cx="239.25577"
-     inkscape:cy="901.56858"
+     inkscape:cx="23.230129"
+     inkscape:cy="775.24778"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1536"
-     inkscape:window-height="801"
-     inkscape:window-x="-8"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      fit-margin-top="0"
@@ -28664,7 +28664,7 @@
          id="tspan5862-0-8-9"
          x="349.9068"
          y="1030.9818"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle">Change in Runoff [mm yr<tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle">Change in Direct Runoff [mm yr<tspan
    style="font-size:7.5px;baseline-shift:super"
    id="tspan10626">-1</tspan>]</tspan></text>
     <text
@@ -29141,7 +29141,7 @@
          inkscape:connector-curvature="0"
          id="path81892-1"
          d="m 41.964394,183.93929 12.676056,0"
-         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
     </g>
     <g
        id="g78471"
@@ -29162,7 +29162,7 @@
          inkscape:connector-curvature="0"
          id="path81892-9-1-9"
          d="m 271.96439,207.3101 12.67606,0"
-         style="fill:none;fill-rule:evenodd;stroke:#d01d1d;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:none;fill-rule:evenodd;stroke:#d01d1d;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
     </g>
     <text
        xml:space="preserve"
@@ -29884,7 +29884,7 @@
          inkscape:connector-curvature="0"
          id="path81892-9-1"
          d="m 143.96439,196.12027 12.67606,0"
-         style="fill:none;fill-rule:evenodd;stroke:#18a718;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:none;fill-rule:evenodd;stroke:#18a718;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
     </g>
   </g>
 </svg>

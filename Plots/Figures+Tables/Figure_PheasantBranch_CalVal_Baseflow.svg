@@ -17,8 +17,8 @@
    inkscape:version="0.91 r13725"
    sodipodi:docname="Figure_PheasantBranch_CalVal_Baseflow.svg"
    inkscape:export-filename="C:\Users\Sam\WorkGits\WaterBalance_ClimateVsLULC\Plots\Figures+Tables\Figure_PheasantBranch_CalVal_Baseflow.png"
-   inkscape:export-xdpi="500"
-   inkscape:export-ydpi="500">
+   inkscape:export-xdpi="300.08078"
+   inkscape:export-ydpi="300.08078">
   <defs
      id="defs4">
     <marker
@@ -2026,8 +2026,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4104645"
-     inkscape:cx="299.08798"
-     inkscape:cy="146.47656"
+     inkscape:cx="60.159599"
+     inkscape:cy="288.27382"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -16388,12 +16388,12 @@
          y="416.28937"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;fill:#18a718;fill-opacity:1">Change due to Land Use</tspan></text>
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="m 380.57733,401.52046 12.67606,0"
        id="path81892-1"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#18a718;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:none;fill-rule:evenodd;stroke:#18a718;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="m 380.57733,413.70144 12.67606,0"
        id="path81892-9-1"
        inkscape:connector-curvature="0" />
@@ -16410,7 +16410,7 @@
          y="427.76862"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;fill:#d01d1d;fill-opacity:1">Change due to Climate</tspan></text>
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#d01d1d;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:none;fill-rule:evenodd;stroke:#d01d1d;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="m 380.57733,424.89126 12.67606,0"
        id="path81892-9-1-9"
        inkscape:connector-curvature="0" />
