@@ -1,4 +1,4 @@
-## PheasantBranch_3_MonthlyRegressions.R
+## PheasantBranch_3a_MonthlyRegressionsPCR.R
 # This script is intended to read in monthly discharge and meteorological data for the Pheasant Branch USGS gauge
 # and fit a principal components regression (PCR). The PCR is calculated using only data from a historical 
 # baseline period (1974-1995) and applied to the entire timeseries (1974-2016). The PCR is fit 250 times using
