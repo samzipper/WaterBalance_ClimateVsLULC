@@ -123,9 +123,9 @@ CalculateClimatePCR <- function(df, mo, flux.name, var.options,
   df.mo.PCs$year <- df.mo$year
   
   ## select number of principal components to use for final relationship
-  # first, select those that explain a cumulative 95% of the total variance
-  PC.95 <- min(which(summary(PCA.fit)$importance["Cumulative Proportion", ] >= cum.var))  # find which PC explains >95% of cumulative proportion
-  PC.keep <- colnames(summary(PCA.fit)$importance)[1:PC.95]
+  # first, select those that explain a cumulative % of the total variance up to cum.var
+  PC.cum.var <- min(which(summary(PCA.fit)$importance["Cumulative Proportion", ] >= cum.var))  # find which PC explains >cum.var% of cumulative proportion
+  PC.keep <- colnames(summary(PCA.fit)$importance)[1:PC.cum.var]
   
   # now, look through remaining PCs and see if any are significantly correlated with output variable, and retain those as well
   # only select from those that explain >0.5% of total variance observed in predictors
@@ -136,8 +136,8 @@ CalculateClimatePCR <- function(df, mo, flux.name, var.options,
     PC.max <- length(summary(PCA.fit)$importance["Proportion of Variance", ])+1
   }
   
-  if (PC.max > PC.95){
-    PC.options <-paste0("PC", (PC.95+1):(PC.max-1))  # number of PCs will correspond to length of vars.keep
+  if (PC.max > PC.cum.var){
+    PC.options <-paste0("PC", (PC.cum.var+1):(PC.max-1))
     for (PC in PC.options){
       fmla.PC <- paste0("flux ~ ", PC)
       fit.PC <- lm(fmla.PC, data=df.mo.PCs)
@@ -230,8 +230,11 @@ CalculateClimatePCR <- function(df, mo, flux.name, var.options,
     # estimate output using model
     df.mo.PCs$estimate <- predict(fit.var, newdata=df.mo.PCs)
     
-    # don't allow negative estimates
-    df.mo.PCs$estimate[df.mo.PCs$estimate<0] <- 0
+    if (!neg.allowed){
+      # don't allow negative estimates
+      df.mo.vars$estimate[df.mo.vars$estimate<0] <- 0
+      
+    }
     
     # get rid of missing values
     df.mo.PCs <- subset(df.mo.PCs, is.finite(estimate) & is.finite(flux))
