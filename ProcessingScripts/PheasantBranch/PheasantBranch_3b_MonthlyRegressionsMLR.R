@@ -55,8 +55,8 @@ yr.baseline.start <- 1974
 yr.baseline.end.all <- c(1995)
 
 ## which flux to analyze?
-flux.name.all <- c("discharge.mm")
-#flux.name.all <- c("discharge.mm", "runoff.mm", "baseflow.mm")
+#flux.name.all <- c("discharge.mm")
+flux.name.all <- c("discharge.mm", "runoff.mm", "baseflow.mm")
 
 # read in discharge and met data frames
 df.met <- read.csv(paste0(git.dir, "Data/PheasantBranch/USW00014837_GHCN_Monthly.csv"))  # use same met data as McFarland
@@ -261,6 +261,6 @@ for (yr.baseline.end in yr.baseline.end.all){
     NashSutcliffe(subset(df.out, group=="val")$MLR, subset(df.out, group=="val")$flux)
     R2(subset(df.out, group=="val")$MLR, subset(df.out, group=="val")$flux)
     
-    #rm(df.out)
+    rm(df.out)
   }
 }

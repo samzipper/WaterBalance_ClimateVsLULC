@@ -20,8 +20,15 @@ path.fig <- paste0(git.dir, "Plots/Figures+Tables/")
 flux <- "srunoff"
 yr.baseline.end <- 1995
 
-# read in data
-df <- read.csv(paste0(git.dir, "Data/PheasantBranch-AgroIBIS/AIAI_MonthlyRegressions_OutputAll.csv"), stringsAsFactors=F)
+# which method to use? options are PCR, PLS, MLR
+method <- "PLS"
+if (method=="PCR"){
+  df <- read.csv(paste0(git.dir, "Data/PheasantBranch-AgroIBIS/AIAI_MonthlyRegressions_OutputAll.csv"), stringsAsFactors=F)
+  colnames(df)[colnames(df)=="PCR"] <- "stat"
+} else if (method=="PLS") {
+  df <- read.csv(paste0(git.dir, "Data/PheasantBranch-AgroIBIS/AIAI_MonthlyRegressions_PLS_OutputAll.csv"), stringsAsFactors=F)
+  colnames(df)[colnames(df)=="PLS"] <- "stat"
+}
 
 # subset to flux of interest
 df <- df[df$flux.name==flux, ]
@@ -35,12 +42,12 @@ df.val.melt <- melt(df.val, id=c("year", "month", "perm", "group", "date", "flux
 df.val.mean <- dplyr::summarize(group_by(df.val, year, month),
                                 date = mean(date),
                                 obs.mean = mean(flux),
-                                PCR.mean = mean(PCR),
-                                PCR.sd = sd(PCR))
-df.val.mean.melt <- melt(df.val.mean[,c("year", "month", "date", "obs.mean", "PCR.mean")], id=c("year", "month", "date"))
+                                stat.mean = mean(stat),
+                                stat.sd = sd(stat))
+df.val.mean.melt <- melt(df.val.mean[,c("year", "month", "date", "obs.mean", "stat.mean")], id=c("year", "month", "date"))
 df.val.mean.yr <- dplyr::summarize(group_by(df.val.mean, year),
                                    obs = sum(obs.mean),
-                                   PCR = sum(PCR.mean))
+                                   stat = sum(stat.mean))
 
 ## now process climate vs LULC data
 df.ann <- read.csv(paste0(git.dir, "Data/PheasantBranch-AgroIBIS/ClimateVsLULC.csv"))
@@ -59,16 +66,16 @@ df.ann.melt <- subset(df.ann.melt, year>yr.baseline.end)
 #### MAKE PLOTS
 ## validation plots
 # statistics
-val.R2 <- R2(df.val$PCR, df.val$flux)
-val.RMSE <- RMSE(df.val$PCR, df.val$flux)
-val.NRMSE <- NRMSE(df.val$PCR, df.val$flux)
-val.NSE <- NashSutcliffe(df.val$PCR, df.val$flux)
-val.NSE.mean <- NashSutcliffe(df.val.mean$PCR.mean, df.val.mean$obs.mean)
+val.R2 <- R2(df.val$stat, df.val$flux)
+val.RMSE <- RMSE(df.val$stat, df.val$flux)
+val.NRMSE <- NRMSE(df.val$stat, df.val$flux)
+val.NSE <- NashSutcliffe(df.val$stat, df.val$flux)
+val.NSE.mean <- NashSutcliffe(df.val.mean$stat.mean, df.val.mean$obs.mean)
 
-val.yr.R2 <- R2(df.val.mean.yr$PCR, df.val.mean.yr$obs)
-val.yr.RMSE <- RMSE(df.val.mean.yr$PCR, df.val.mean.yr$obs)
-val.yr.NRMSE <- NRMSE(df.val.mean.yr$PCR, df.val.mean.yr$obs)
-val.yr.NSE <- NashSutcliffe(df.val.mean.yr$PCR, df.val.mean.yr$obs)
+val.yr.R2 <- R2(df.val.mean.yr$stat, df.val.mean.yr$obs)
+val.yr.RMSE <- RMSE(df.val.mean.yr$stat, df.val.mean.yr$obs)
+val.yr.NRMSE <- NRMSE(df.val.mean.yr$stat, df.val.mean.yr$obs)
+val.yr.NSE <- NashSutcliffe(df.val.mean.yr$stat, df.val.mean.yr$obs)
 
 # timeseries
 p.val.time <- 
@@ -76,9 +83,9 @@ p.val.time <-
   geom_hline(yintercept=0, color="gray65") +
   geom_line() +
   scale_x_date(name="Date", expand=c(0,0)) +
-  scale_y_continuous(name="Runoff [mm]", limits=c(0,66.2), breaks=seq(0,60,15)) +
-  scale_color_manual(name="Source", labels=c("obs.mean"="Obs.", "PCR.mean"="PCR"),
-                     values=c("obs.mean"="black", "PCR.mean"="#127D7D"), guide=F) +
+  scale_y_continuous(name="Discharge [mm]", limits=c(min(df.val.melt$value), max(df.val.melt$value))) +
+  scale_color_manual(name="Source", labels=c("obs.mean"="Obs.", "stat.mean"=method),
+                     values=c("obs.mean"="black", "stat.mean"="#127D7D"), guide=F) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))
@@ -89,9 +96,9 @@ p.val.box <-
   geom_hline(yintercept=0, color="gray65") +
   geom_boxplot(outlier.shape=1, outlier.fill=NULL) +
   scale_x_discrete(name="Month") +
-  scale_y_continuous(name="Discharge [mm]", limits=c(0,66.2), breaks=seq(0,60,15)) +
-  scale_fill_manual(name="Source", labels=c("obs"="Obs.", "PCR"="PCR"), 
-                    values=c("obs"="white", "PCR"="#127D7D"), guide=F) +
+  scale_y_continuous(name="Discharge [mm]", limits=c(min(df.val.melt$value), max(df.val.melt$value))) +
+  scale_fill_manual(name="Source", labels=c("obs"="Obs.", "stat"=method), 
+                    values=c("obs"="white", "stat"="#127D7D"), guide=F) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))
@@ -154,7 +161,7 @@ p.climate.LULC.hist <-
   geom_vline(xintercept=0, color="gray65") +
   geom_density(aes(x=value, fill=variable), alpha=0.5, color=NA) +
   geom_density(data=subset(df.ann.melt, variable=="change.overall.mean"), aes(x=value), color="black", fill=NA) +
-  scale_x_continuous(name="Change in Annual Runoff Depth [mm]", expand=c(0,0), breaks=seq(-30,90,30), limits=c(-30.21, 117.55)) +
+  scale_x_continuous(name="Change in Annual Runoff Depth [mm]", expand=c(0,0)) +
   scale_y_continuous(name="Density", expand=c(0,0)) +
   scale_fill_manual(name="Driver: ", 
                     values=c("change.climate.mean"="#D01D1D", "change.LULC.mean"="#18A718"), 

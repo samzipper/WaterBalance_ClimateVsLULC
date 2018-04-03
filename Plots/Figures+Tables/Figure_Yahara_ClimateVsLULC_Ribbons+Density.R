@@ -18,8 +18,27 @@ require(reshape2)
 # path to save figure output
 path.fig <- paste0(git.dir, "Plots/Figures+Tables/")
 
-# load separated climate vs LULC data (from script Yahara_2_ClimateVsLULC.R)
-df <- read.csv(paste0(git.dir, "Data/Yahara-AgroIBIS/HistLULC_AllClim_ClimateVsLULC.csv"), stringsAsFactors=F)
+# use HistLULC_XXclim simulations?
+hist.LULC <- F   # T or F
+
+# which method to use? options are PCR, PLS
+method <- "PLS"
+if (method=="PCR"){
+  if (hist.LULC){
+    df <- read.csv(paste0(git.dir, "Data/Yahara-AgroIBIS/HistLULC_AllClim_ClimateVsLULC.csv"), stringsAsFactors=F)
+  } else {
+    df <- read.csv(paste0(git.dir, "Data/Yahara-AgroIBIS/ClimateVsLULC.csv"), stringsAsFactors=F)
+  }
+  colnames(df)[colnames(df)=="PCR"] <- "stat"
+  
+} else if (method=="PLS") {
+  if (hist.LULC){
+    df <- read.csv(paste0(git.dir, "Data/Yahara-AgroIBIS/HistLULC_AllClim_PLS_ClimateVsLULC.csv"), stringsAsFactors=F)
+  } else {
+    df <- read.csv(paste0(git.dir, "Data/Yahara-AgroIBIS/PLS_ClimateVsLULC.csv"), stringsAsFactors=F)
+  }
+  colnames(df)[colnames(df)=="PLS"] <- "stat"
+}
 
 # figure out what year to start plots
 yr.avg.start.plot <- min(df$year[is.finite(df$avg.change.overall.mean)])
@@ -132,9 +151,6 @@ dev.off()
 df.hist.aet <- subset(df, year>=2051 & flux.name=="aet")
 df.hist.drainage <- subset(df, year>=2051 & flux.name=="drainage")
 df.hist.srunoff <- subset(df, year>=2051 & flux.name=="srunoff")
-
-
-
 
 change.overall.aet.all <- c(mean(subset(df.hist.aet, climate=="AI" & LULC=="AI")$change.overall.mean), 
                             mean(subset(df.hist.aet, climate=="AI" & LULC=="AR")$change.overall.mean),
@@ -456,8 +472,8 @@ p.climate.LULC.hist.aet <-
   geom_density(aes(x=change.overall.mean), color="black", fill=NA, alpha=0.75) +
   facet_grid(LULC ~ climate) +
   ggtitle("Top Labels=Climate, Right Side=LULC") +
-  scale_x_continuous(name="Change in Annual Depth [mm]") +
-  scale_y_continuous(name="Density") +
+  scale_x_continuous(name="Change in Annual Depth [mm]", breaks=seq(-50,150,50)) +
+  scale_y_continuous(name="Density", breaks=seq(0,0.02,0.01)) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))
@@ -470,8 +486,8 @@ p.climate.LULC.hist.drainage <-
   geom_density(aes(x=change.overall.mean), color="black", fill=NA, alpha=0.75) +
   facet_grid(LULC ~ climate) +
   ggtitle("Top Labels=Climate, Right Side=LULC") +
-  scale_x_continuous(name="Change in Annual Depth [mm]", breaks=seq(-300,150,150)) +
-  scale_y_continuous(name="Density", breaks=c(0,0.01)) +
+  scale_x_continuous(name="Change in Annual Depth [mm]", breaks=seq(-250,250,250)) +
+  scale_y_continuous(name="Density") +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))
@@ -485,7 +501,7 @@ p.climate.LULC.hist.srunoff <-
   facet_grid(LULC ~ climate) +
   ggtitle("Top Labels=Climate, Right Side=LULC") +
   scale_x_continuous(name="Change in Annual Depth [mm]") +
-  scale_y_continuous(name="Density", seq(0,0.02,0.01)) +
+  scale_y_continuous(name="Density", breaks=seq(0,0.02,0.01)) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))

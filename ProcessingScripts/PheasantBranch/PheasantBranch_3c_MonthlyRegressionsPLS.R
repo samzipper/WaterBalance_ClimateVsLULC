@@ -17,6 +17,7 @@ require(tidyr)
 require(WVPlots)  # devtools::install_github('WinVector/WVPlots',build_vignettes=TRUE)
 require(gridExtra)
 require(lubridate)
+require(pls)
 
 # function used for scaling data
 scale.baseline <- function(x,year,yr.start,yr.end){
@@ -55,8 +56,8 @@ yr.baseline.start <- 1974
 yr.baseline.end.all <- c(1995)
 
 ## which flux to analyze?
+#flux.name.all <- c("discharge.mm")
 flux.name.all <- c("discharge.mm")
-#flux.name.all <- c("discharge.mm", "runoff.mm", "baseflow.mm")
 
 # read in discharge and met data frames
 df.met <- read.csv(paste0(git.dir, "Data/PheasantBranch/USW00014837_GHCN_Monthly.csv"))  # use same met data as McFarland
@@ -258,6 +259,6 @@ for (yr.baseline.end in yr.baseline.end.all){
     NashSutcliffe(subset(df.out, group=="val")$PLS, subset(df.out, group=="val")$flux)
     R2(subset(df.out, group=="val")$PLS, subset(df.out, group=="val")$flux)
     
-    #rm(df.out)
+    rm(df.out)
   }
 }

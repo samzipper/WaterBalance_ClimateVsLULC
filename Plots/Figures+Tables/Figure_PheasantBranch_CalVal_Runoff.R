@@ -18,10 +18,21 @@ path.fig <- paste0(git.dir, "Plots/Figures+Tables/")
 
 # name of flux and baseline year to plot
 flux.name <- "runoff.mm"
+yr.baseline.start <- 1975
 yr.baseline.end <- 1995
 
-# read in data
-df <- read.csv(paste0(git.dir, "Data/PheasantBranch/", flux.name, "/", yr.baseline.end, "/GHCN_MonthlyRegressions_OutputAll.csv"))
+# which method to use? options are PCR, PLS, MLR
+method <- "PLS"
+if (method=="PCR"){
+  df <- read.csv(paste0(git.dir, "Data/PheasantBranch/", flux.name, "/", yr.baseline.end, "/GHCN_MonthlyRegressions_OutputAll.csv"))
+  colnames(df)[colnames(df)=="PCR"] <- "stat"
+} else if (method=="MLR") {
+  df <- read.csv(paste0(git.dir, "Data/PheasantBranch/", flux.name, "/", yr.baseline.end, "/GHCN_MonthlyRegressions_MLR_OutputAll.csv"))
+  colnames(df)[colnames(df)=="MLR"] <- "stat"
+} else if (method=="PLS") {
+  df <- read.csv(paste0(git.dir, "Data/PheasantBranch/", flux.name, "/", yr.baseline.end, "/GHCN_MonthlyRegressions_PLS_OutputAll.csv"))
+  colnames(df)[colnames(df)=="PLS"] <- "stat"
+}
 
 # date column
 df$date <- ymd(paste0(df$year, "-", df$month, "-15"))
@@ -32,12 +43,12 @@ df.val.melt <- melt(df.val, id=c("year", "month", "perm", "group", "date"))
 df.val.mean <- dplyr::summarize(group_by(df.val, year, month),
                                 date = mean(date),
                                 obs.mean = mean(flux),
-                                PCR.mean = mean(PCR),
-                                PCR.sd = sd(PCR))
-df.val.mean.melt <- melt(df.val.mean[,c("year", "month", "date", "obs.mean", "PCR.mean")], id=c("year", "month", "date"))
+                                stat.mean = mean(stat),
+                                stat.sd = sd(stat))
+df.val.mean.melt <- melt(df.val.mean[,c("year", "month", "date", "obs.mean", "stat.mean")], id=c("year", "month", "date"))
 df.val.mean.yr <- dplyr::summarize(group_by(df.val.mean, year),
                                    obs = sum(obs.mean),
-                                   PCR = sum(PCR.mean))
+                                   stat = sum(stat.mean))
 
 ## now process climate vs LULC data
 # number of years for moving average
@@ -65,18 +76,18 @@ Q.ann.baseline.sd <- sd(subset(df.Q.ann, year >= yr.baseline.start & year <= yr.
 # for each permutation, sum to annual total
 df.perm.ann <- dplyr::summarize(group_by(df, year, perm),
                                 obs.sum = sum(flux),
-                                PCR.sum = sum(PCR))
+                                stat.sum = sum(stat))
 df.perm.ann$obs.baseline.static <- Q.ann.baseline.mean
 
 df.perm.ann$change.overall.static <- df.perm.ann$obs.sum - df.perm.ann$obs.baseline.static
-df.perm.ann$change.climate.static <- df.perm.ann$PCR.sum - df.perm.ann$obs.baseline.static
+df.perm.ann$change.climate.static <- df.perm.ann$stat.sum - df.perm.ann$obs.baseline.static
 df.perm.ann$change.LULC.static <- df.perm.ann$change.overall.static - df.perm.ann$change.climate.static
 
 # calculate mean and standard deviation
 df.ann <- dplyr::summarize(group_by(df.perm.ann, year),
                            obs = mean(obs.sum),
-                           PCR.mean = mean(PCR.sum),
-                           PCR.sd = sd(PCR.sum),
+                           stat.mean = mean(stat.sum),
+                           stat.sd = sd(stat.sum),
                            change.overall.static.mean = mean(change.overall.static),
                            change.overall.static.sd = sd(change.overall.static),
                            change.climate.static.mean = mean(change.climate.static),
@@ -85,8 +96,8 @@ df.ann <- dplyr::summarize(group_by(df.perm.ann, year),
                            change.LULC.static.sd = sd(change.LULC.static))
 
 # calculate some min/max columns to use for ribbons
-df.ann$PCR.min <- df.ann$PCR.mean - df.ann$PCR.sd
-df.ann$PCR.max <- df.ann$PCR.mean + df.ann$PCR.sd
+df.ann$stat.min <- df.ann$stat.mean - df.ann$stat.sd
+df.ann$stat.max <- df.ann$stat.mean + df.ann$stat.sd
 
 df.ann$change.overall.static.min <- df.ann$change.overall.static.mean - df.ann$change.overall.static.sd
 df.ann$change.overall.static.max <- df.ann$change.overall.static.mean + df.ann$change.overall.static.sd
@@ -99,19 +110,20 @@ df.ann$change.LULC.static.max <- df.ann$change.LULC.static.mean + df.ann$change.
 df.ann.melt <- melt(df.ann[,c("year", "change.overall.static.mean", "change.climate.static.mean", "change.LULC.static.mean")], id="year")
 df.ann.melt <- subset(df.ann.melt, year>yr.baseline.end)
 
-#### MAKE PLOTS
-## validation plots
-# statistics
-val.R2 <- R2(df.val$PCR, df.val$flux)
-val.RMSE <- RMSE(df.val$PCR, df.val$flux)
-val.NRMSE <- NRMSE(df.val$PCR, df.val$flux)
-val.NSE <- round(NashSutcliffe(df.val$PCR, df.val$flux), 3)
-val.NSE.mean <- NashSutcliffe(df.val.mean$PCR.mean, df.val.mean$obs.mean)
+df.perm.ann.melt <- melt(df.perm.ann[,c("year", "change.overall.static", "change.climate.static", "change.LULC.static")], id="year")
+df.perm.ann.melt <- subset(df.perm.ann.melt, year>yr.baseline.end)
 
-val.yr.R2 <- R2(df.val.mean.yr$PCR, df.val.mean.yr$obs)
-val.yr.RMSE <- RMSE(df.val.mean.yr$PCR, df.val.mean.yr$obs)
-val.yr.NRMSE <- NRMSE(df.val.mean.yr$PCR, df.val.mean.yr$obs)
-val.yr.NSE <- round(NashSutcliffe(df.val.mean.yr$PCR, df.val.mean.yr$obs), 3)
+# statistics
+val.R2 <- R2(df.val$stat, df.val$flux)
+val.RMSE <- RMSE(df.val$stat, df.val$flux)
+val.NRMSE <- NRMSE(df.val$stat, df.val$flux)
+val.NSE <- round(NashSutcliffe(df.val$stat, df.val$flux), 3)
+val.NSE.mean <- NashSutcliffe(df.val.mean$stat.mean, df.val.mean$obs.mean)
+
+val.yr.R2 <- R2(df.val.mean.yr$stat, df.val.mean.yr$obs)
+val.yr.RMSE <- RMSE(df.val.mean.yr$stat, df.val.mean.yr$obs)
+val.yr.NRMSE <- NRMSE(df.val.mean.yr$stat, df.val.mean.yr$obs)
+val.yr.NSE <- round(NashSutcliffe(df.val.mean.yr$stat, df.val.mean.yr$obs), 3)
 
 # timeseries
 p.val.time <- 
@@ -119,9 +131,9 @@ p.val.time <-
   geom_hline(yintercept=0, color="gray65") +
   geom_line() +
   scale_x_date(name="Date", expand=c(0,0)) +
-  scale_y_continuous(name="Runoff [mm]", limits=c(0,66.2), breaks=seq(0,60,15)) +     # limits based on Figure_PheasantBranch-AgroIBIS_Runoff
-  scale_color_manual(name="Source", labels=c("obs.mean"="Obs.", "PCR.mean"="PCR"),
-                       values=c("obs.mean"="black", "PCR.mean"="#127D7D"), guide=F) +
+  scale_y_continuous(name="Runoff [mm]", limits=c(min(df.val.melt$value), max(df.val.melt$value))) +
+  scale_color_manual(name="Source", labels=c("obs.mean"="Obs.", "stat.mean"="stat"),
+                     values=c("obs.mean"="black", "stat.mean"="#127D7D"), guide=F) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))
@@ -132,51 +144,52 @@ p.val.box <-
   geom_hline(yintercept=0, color="gray65") +
   geom_boxplot(outlier.shape=1, outlier.fill=NULL) +
   scale_x_discrete(name="Month") +
-  scale_y_continuous(name="Discharge [mm]", limits=c(0,66.2), breaks=seq(0,60,15)) +
-  scale_fill_manual(name="Source", labels=c("obs"="Obs.", "PCR"="PCR"), 
-                      values=c("obs"="white", "PCR"="#127D7D"), guide=F) +
+  scale_y_continuous(name="Runoff [mm]", limits=c(min(df.val.melt$value), max(df.val.melt$value))) +
+  scale_fill_manual(name="Source", labels=c("obs"="Obs.", "stat"="stat"), 
+                    values=c("obs"="white", "stat"="#127D7D"), guide=F) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))
 
 ## results plots
 # statistics
-mean(subset(df.ann, year>=1996)$change.overall.static.mean)     # overall mean
-sd(subset(df.ann, year>=1996)$change.overall.static.mean)
-t.test(subset(df.ann, year>=1996)$change.overall.static.mean)
-mean(subset(df.ann, year>=1996)$change.climate.static.mean)     # climate mean
-sd(subset(df.ann, year>=1996)$change.climate.static.mean)
-t.test(subset(df.ann, year>=1996)$change.climate.static.mean)
-mean(subset(df.ann, year>=1996)$change.LULC.static.mean)        # LULC mean
-sd(subset(df.ann, year>=1996)$change.LULC.static.mean)
-t.test(subset(df.ann, year>=1996)$change.LULC.static.mean)
+mean(subset(df.ann, year>yr.baseline.end)$change.overall.static.mean)     # overall mean
+sd(subset(df.ann, year>yr.baseline.end)$change.overall.static.mean)
+t.test(subset(df.ann, year>yr.baseline.end)$change.overall.static.mean)
+mean(subset(df.ann, year>yr.baseline.end)$change.climate.static.mean)     # climate mean
+sd(subset(df.ann, year>yr.baseline.end)$change.climate.static.mean)
+t.test(subset(df.ann, year>yr.baseline.end)$change.climate.static.mean)
+mean(subset(df.ann, year>yr.baseline.end)$change.LULC.static.mean)        # LULC mean
+sd(subset(df.ann, year>yr.baseline.end)$change.LULC.static.mean)
+t.test(subset(df.ann, year>yr.baseline.end)$change.LULC.static.mean)
 
-mean(subset(df.ann, year<1996)$change.overall.static.mean)     # overall mean
-sd(subset(df.ann, year<1996)$change.overall.static.mean)
-t.test(subset(df.ann, year<1996)$change.overall.static.mean)
-mean(subset(df.ann, year<1996)$change.climate.static.mean)     # climate mean
-sd(subset(df.ann, year<1996)$change.climate.static.mean)
-t.test(subset(df.ann, year<1996)$change.climate.static.mean)
-mean(subset(df.ann, year<1996)$change.LULC.static.mean)        # LULC mean
-sd(subset(df.ann, year<1996)$change.LULC.static.mean)
-t.test(subset(df.ann, year<1996)$change.LULC.static.mean)
+mean(subset(df.ann, year<=yr.baseline.end)$change.overall.static.mean)     # overall mean
+sd(subset(df.ann, year<=yr.baseline.end)$change.overall.static.mean)
+t.test(subset(df.ann, year<=yr.baseline.end)$change.overall.static.mean)
+mean(subset(df.ann, year<=yr.baseline.end)$change.climate.static.mean)     # climate mean
+sd(subset(df.ann, year<=yr.baseline.end)$change.climate.static.mean)
+t.test(subset(df.ann, year<=yr.baseline.end)$change.climate.static.mean)
+mean(subset(df.ann, year<=yr.baseline.end)$change.LULC.static.mean)        # LULC mean
+sd(subset(df.ann, year<=yr.baseline.end)$change.LULC.static.mean)
+t.test(subset(df.ann, year<=yr.baseline.end)$change.LULC.static.mean)
 
-mean(subset(df.ann, year>=1996)$change.climate.static.mean)/mean(subset(df.ann, year>=1996)$change.overall.static.mean)
-mean(subset(df.ann, year>=1996)$change.LULC.static.mean)/mean(subset(df.ann, year>=1996)$change.overall.static.mean)
+mean(subset(df.ann, year>yr.baseline.end)$change.climate.static.mean)/mean(subset(df.ann, year>yr.baseline.end)$change.overall.static.mean)
+mean(subset(df.ann, year>yr.baseline.end)$change.LULC.static.mean)/mean(subset(df.ann, year>yr.baseline.end)$change.overall.static.mean)
 
-sum(subset(df.ann, year>=1996)$change.LULC.static.mean>0)        # LULC positive effect number of years
-sum(subset(df.ann, year>=1996)$change.climate.static.mean>0)
+sum(subset(df.ann, year>yr.baseline.end)$change.LULC.static.mean>0)        # LULC positive effect number of years
+sum(subset(df.ann, year>yr.baseline.end)$change.climate.static.mean>0)
 
 
-summary(lm(change.overall.static.mean ~ year, data=subset(df.ann, year>=1996)))   # overall trend
-summary(lm(change.climate.static.mean ~ year, data=subset(df.ann, year>=1996)))   # climate trend
-summary(lm(change.LULC.static.mean ~ year, data=subset(df.ann, year>=1996)))      # LULC trend
+summary(lm(change.overall.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))   # overall trend
+summary(lm(change.climate.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))   # climate trend
+summary(lm(change.LULC.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))      # LULC trend
 
-summary(lm(change.overall.static.mean ~ year, data=subset(df.ann, year<1996)))   # overall trend
-summary(lm(change.climate.static.mean ~ year, data=subset(df.ann, year<1996)))   # climate trend
-summary(lm(change.LULC.static.mean ~ year, data=subset(df.ann, year<1996)))      # LULC trend
 
-coef(lm(change.LULC.static.mean ~ year, data=subset(df.ann, year>=1996)))[2]/coef(lm(change.overall.static.mean ~ year, data=subset(df.ann, year>=1996)))[2]
+summary(lm(change.overall.static.mean ~ year, data=subset(df.ann, year<=yr.baseline.end)))   # overall trend
+summary(lm(change.climate.static.mean ~ year, data=subset(df.ann, year<=yr.baseline.end)))   # climate trend
+summary(lm(change.LULC.static.mean ~ year, data=subset(df.ann, year<=yr.baseline.end)))      # LULC trend
+
+coef(lm(change.LULC.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]/coef(lm(change.overall.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]
 
 # plots
 p.ribbon.static <- 
@@ -186,7 +199,7 @@ p.ribbon.static <-
   geom_ribbon(aes(ymin=change.climate.static.min, ymax=change.climate.static.max), fill="#D01D1D", alpha=0.5) +
   geom_ribbon(aes(ymin=change.LULC.static.min, ymax=change.LULC.static.max), fill="#18A718", alpha=0.5) +
   scale_x_continuous(name="Year", expand=c(0,0)) +
-  scale_y_continuous(name="Change from Baseline Period [mm]") +
+  scale_y_continuous(name="Change from Baseline Period [mm]", breaks=seq(-50,150,50)) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))
@@ -196,7 +209,7 @@ p.climate.LULC.hist <-
   geom_vline(xintercept=0, color="gray65") +
   geom_density(aes(x=value, fill=variable), alpha=0.5, color=NA) +
   geom_density(data=subset(df.ann.melt, variable=="change.overall.static.mean"), aes(x=value), color="black", fill=NA) +
-  scale_x_continuous(name="Change in Annual Runoff Depth [mm]", expand=c(0,0), breaks=seq(-30,90,30), limits=c(-30.21, 117.55)) +   # from Figure_PheasantBranch-AgroIBIS_Runoff
+  scale_x_continuous(name="Change in Annual Runoff Depth [mm]", expand=c(0,0)) +
   scale_y_continuous(name="Density", expand=c(0,0)) +
   scale_fill_manual(name="Driver: ", 
                     values=c("change.climate.static.mean"="#D01D1D", "change.LULC.static.mean"="#18A718"), 
@@ -227,17 +240,17 @@ p.urb <-
         panel.border=element_rect(color="black"))
 
 summary(lm(urb.prc ~ year, data=df.urb))  # urban LULC % trend
-coef(lm(change.LULC.static.mean ~ year, data=subset(df.ann, year>=1996)))[2]/coef(lm(urb.prc ~ year, data=df.urb))[2]
+coef(lm(change.LULC.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]/coef(lm(urb.prc ~ year, data=df.urb))[2]
 
 ## save plots
 pdf(file=paste0(path.fig, "Figure_PheasantBranch_CalVal_Runoff_NoText.pdf"), width=(181/25.4), height=(120/25.4))
 grid.arrange(
   arrangeGrob(p.val.time+theme(text=element_blank(), plot.margin=unit(c(0,6,4,0), "mm")),
-             p.val.box+theme(text=element_blank(), plot.margin=unit(c(4,6,0,0), "mm")),
-             ncol=1),
+              p.val.box+theme(text=element_blank(), plot.margin=unit(c(4,6,0,0), "mm")),
+              ncol=1),
   arrangeGrob(p.urb+theme(text=element_blank(), plot.margin=unit(c(0,0,8,6), "mm")),
               p.ribbon.static+theme(text=element_blank(), plot.margin=unit(c(0,0,4,6), "mm")),
-             p.climate.LULC.hist+theme(text=element_blank(), plot.margin=unit(c(4,0,0,6), "mm")),
-             ncol=1),
+              p.climate.LULC.hist+theme(text=element_blank(), plot.margin=unit(c(4,0,0,6), "mm")),
+              ncol=1),
   ncol=2)
 dev.off()

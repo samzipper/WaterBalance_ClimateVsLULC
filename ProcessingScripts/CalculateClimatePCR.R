@@ -232,8 +232,7 @@ CalculateClimatePCR <- function(df, mo, flux.name, var.options,
     
     if (!neg.allowed){
       # don't allow negative estimates
-      df.mo.vars$estimate[df.mo.vars$estimate<0] <- 0
-      
+      df.mo.PCs$estimate[df.mo.PCs$estimate<0] <- 0
     }
     
     # get rid of missing values

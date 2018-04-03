@@ -1,7 +1,7 @@
 CalculateClimatePLS <- function(df, mo, flux.name, var.options, 
                                 yr.baseline.start, yr.baseline.end, n.val.yr,
                                 p.thres=0.10, cum.var=0.80, min.var=0.01, min.PCs.keep=1, n.perm=250, seed=1,
-                                neg.allowed=F,  write.vars.keep=T, write.PC.keep=T, write.perm=T,
+                                neg.allowed=F, write.vars.keep=T, write.PC.keep=T, write.perm=T,
                                 plot.dir=NULL){
   #' This script is intended to use partial least squares regression (PLS) to 
   #' build statistical relationships between meteorological variables and a
@@ -134,7 +134,7 @@ CalculateClimatePLS <- function(df, mo, flux.name, var.options,
   # apply PLS.fit to entire period
   df.mo.PCs <- as.data.frame(predict(PLS.fit, newdata=df.mo.vars))
   colnames(df.mo.PCs) <- paste0("PC", seq(1,dim(df.mo.PCs)[2]))
-  df.mo.PCs$flux <- df.mo$flux     # add in your desired predictor variable
+  df.mo.PCs$flux <- df.mo$flux     # add in your desired response variable
   df.mo.PCs$year <- df.mo$year
   
   # build formula based on retained PCs
@@ -175,12 +175,11 @@ CalculateClimatePLS <- function(df, mo, flux.name, var.options,
     fit.PLS <- plsr(fmla, data=subset(df.mo.PCs, group=="cal"))
     
     # estimate output using model
-    df.mo.PCs$estimate <- predict(fit.PLS, ncomp=dim(PCs.keep)[1], newdata=df.mo.PCs)
+    df.mo.PCs$estimate <- predict(fit.PLS, ncomp=length(PC.keep), newdata=df.mo.PCs)
     
-    if (!neg.allowed & sum(df.mo.vars$estimate<0)>=1){
+    if (!neg.allowed){
       # don't allow negative estimates
-      df.mo.vars$estimate[df.mo.vars$estimate<0] <- 0
-      
+      df.mo.PCs$estimate[df.mo.PCs$estimate<0] <- 0
     }
     
     # get rid of missing values

@@ -11,6 +11,7 @@ require(ggplot2)
 require(dplyr)
 require(lubridate)
 require(reshape2)
+require(gridExtra)
 source(paste0(git.dir, "ProcessingScripts/FitMetrics.R"))
 
 # path to save figure output
@@ -181,15 +182,40 @@ val.PLS.yr.RMSE <- RMSE(df.val.mean.yr$PLS, df.val.mean.yr$obs)
 val.PLS.yr.NRMSE <- NRMSE(df.val.mean.yr$PLS, df.val.mean.yr$obs)
 val.PLS.yr.NSE <- round(NashSutcliffe(df.val.mean.yr$PLS, df.val.mean.yr$obs), 3)
 
+# set factor order
+df.val.mean.melt$variable <- factor(df.val.mean.melt$variable, levels=c("obs.mean", "PLS.mean", "PCR.mean", "MLR.mean"))
+df.val.melt$variable <- factor(df.val.melt$variable, levels=c("flux", "PLS", "PCR", "MLR"))
+
 # timeseries
-p.val.time <- 
-  ggplot(df.val.mean.melt, aes(x=date, y=value, color=variable)) +
+p.val.time.PLS <- 
+  ggplot() +
   geom_hline(yintercept=0, color="gray65") +
-  geom_line() +
+  geom_line(data=subset(df.val.mean.melt, variable=="obs.mean"), aes(x=date, y=value), color="black") +
+  geom_line(data=subset(df.val.mean.melt, variable=="PLS.mean"), aes(x=date, y=value), color="#127D7D") +
   scale_x_date(name="Date", expand=c(0,0)) +
   scale_y_continuous(name="Discharge [mm]", limits=c(0,60), breaks=seq(0,60,20)) +
-  scale_color_manual(name="Source", labels=c("obs.mean"="Obs.", "PCR.mean"="PCR", "MLR.mean"="MLR"),
-                       values=c("obs.mean"="black", "PCR.mean"="#127D7D", "MLR.mean"="forestgreen", "PLS.mean"="aquamarine"), guide=F) +
+  theme_bw() +
+  theme(panel.grid=element_blank(),
+        panel.border=element_rect(color="black"))
+
+p.val.time.PCR <- 
+  ggplot() +
+  geom_hline(yintercept=0, color="gray65") +
+  geom_line(data=subset(df.val.mean.melt, variable=="obs.mean"), aes(x=date, y=value), color="black") +
+  geom_line(data=subset(df.val.mean.melt, variable=="PCR.mean"), aes(x=date, y=value), color="#D01E1E") +
+  scale_x_date(name="Date", expand=c(0,0)) +
+  scale_y_continuous(name="Discharge [mm]", limits=c(0,60), breaks=seq(0,60,20)) +
+  theme_bw() +
+  theme(panel.grid=element_blank(),
+        panel.border=element_rect(color="black"))
+
+p.val.time.MLR <- 
+  ggplot() +
+  geom_hline(yintercept=0, color="gray65") +
+  geom_line(data=subset(df.val.mean.melt, variable=="obs.mean"), aes(x=date, y=value), color="black") +
+  geom_line(data=subset(df.val.mean.melt, variable=="MLR.mean"), aes(x=date, y=value), color="#D0951E") +
+  scale_x_date(name="Date", expand=c(0,0)) +
+  scale_y_continuous(name="Discharge [mm]", limits=c(0,60), breaks=seq(0,60,20)) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))
@@ -201,13 +227,67 @@ p.val.box <-
   geom_boxplot(outlier.shape=1, outlier.fill=NULL) +
   scale_x_discrete(name="Month") +
   scale_y_continuous(name="Discharge [mm]", limits=c(0,77.5), breaks=seq(0,75,15)) +
-  scale_fill_manual(name="Source", labels=c("obs"="Obs.", "PCR"="PCR", "MLR"="MLR"), 
-                      values=c("obs"="white", "PCR"="#127D7D", "MLR"="forestgreen", "PLS"="aquamarine"), guide=F) +
+  scale_fill_manual(name="Source", labels=c("flux"="Obs.", "PCR"="PCR", "MLR"="MLR", "PLS"="PLS"), 
+                      values=c("flux"="white", "PLS"="#127D7D", "MLR"="#D0951E", "PCR"="#D01E1E"), guide=F) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))
 
 ## results plots
+# plots
+p.ribbon.static.PLS <- 
+  ggplot(df.ann, aes(x=year)) +
+  geom_hline(yintercept=0, color="gray65") +
+  geom_line(aes(y=change.overall.mean), color="black") +
+  geom_ribbon(aes(ymin=change.climate.PLS.min, ymax=change.climate.PLS.max), fill="#127D7D", alpha=0.5) +
+  geom_line(aes(y=change.climate.PLS.mean), color="#127D7D", alpha=0.5) +
+  scale_x_continuous(name="Year", expand=c(0,0)) +
+  scale_y_continuous(name="Change from Baseline Period [mm]", breaks=seq(-50,150,50)) +
+  theme_bw() +
+  theme(panel.grid=element_blank(),
+        panel.border=element_rect(color="black"))
+
+p.ribbon.static.PCR <- 
+  ggplot(df.ann, aes(x=year)) +
+  geom_hline(yintercept=0, color="gray65") +
+  geom_line(aes(y=change.overall.mean), color="black") +
+  geom_ribbon(aes(ymin=change.climate.PCR.min, ymax=change.climate.PCR.max), fill="#D01E1E", alpha=0.5) +
+  geom_line(aes(y=change.climate.PCR.mean), color="#D01E1E", alpha=0.5) +
+  scale_x_continuous(name="Year", expand=c(0,0)) +
+  scale_y_continuous(name="Change from Baseline Period [mm]", breaks=seq(-50,150,50)) +
+  theme_bw() +
+  theme(panel.grid=element_blank(),
+        panel.border=element_rect(color="black"))
+
+p.ribbon.static.MLR <- 
+  ggplot(df.ann, aes(x=year)) +
+  geom_hline(yintercept=0, color="gray65") +
+  geom_line(aes(y=change.overall.mean), color="black") +
+  geom_ribbon(aes(ymin=change.climate.MLR.min, ymax=change.climate.MLR.max), fill="#D0951E", alpha=0.5) +
+  geom_line(aes(y=change.climate.MLR.mean), color="#D0951E", alpha=0.5) +
+  scale_x_continuous(name="Year", expand=c(0,0)) +
+  scale_y_continuous(name="Change from Baseline Period [mm]", breaks=seq(-50,150,50)) +
+  theme_bw() +
+  theme(panel.grid=element_blank(),
+        panel.border=element_rect(color="black"))
+
+## save plots
+ggsave(paste0(path.fig, "Figure_PheasantBranch_ComparePCR-MLR-PLS_NoText.pdf"), 
+       grid.arrange(
+         arrangeGrob(
+           arrangeGrob(p.val.time.PLS+theme(text=element_blank(), plot.margin=unit(c(0,6,0.5,0), "mm")),
+                       p.val.time.PCR+theme(text=element_blank(), plot.margin=unit(c(0,6,0.5,0), "mm")),
+                       p.val.time.MLR+theme(text=element_blank(), plot.margin=unit(c(0,6,0.5,0), "mm")),
+                       ncol=1),
+           arrangeGrob(p.ribbon.static.PLS+theme(text=element_blank(), plot.margin=unit(c(0,0,0.5,6), "mm")),
+                       p.ribbon.static.PCR+theme(text=element_blank(), plot.margin=unit(c(0,0,0.5,6), "mm")),
+                       p.ribbon.static.MLR+theme(text=element_blank(), plot.margin=unit(c(0,0,0.5,6), "mm")),
+                       ncol=1),
+           ncol=2),
+         p.val.box+theme(text=element_blank(), plot.margin=unit(c(8,0,0,0), "mm")), ncol=1, heights=c(1, 0.6)), 
+       width=(181/25.4), height=(180/25.4), units="in")
+
+
 ## statistics
 # prediction period
 mean(subset(df.ann, year>yr.baseline.end)$change.overall.mean)     # overall mean
@@ -289,19 +369,6 @@ coef(lm(change.LULC.PCR.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))
 coef(lm(change.LULC.MLR.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]/coef(lm(change.overall.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]
 coef(lm(change.LULC.PLS.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]/coef(lm(change.overall.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]
 
-# plots
-p.ribbon.static <- 
-  ggplot(df.ann, aes(x=year)) +
-  geom_hline(yintercept=0, color="gray65") +
-  geom_line(aes(y=change.overall.mean), color="black") +
-  geom_ribbon(aes(ymin=change.climate.PCR.min, ymax=change.climate.PCR.max), fill="#127D7D", alpha=0.5) +
-  geom_ribbon(aes(ymin=change.climate.MLR.min, ymax=change.climate.MLR.max), fill="forestgreen", alpha=0.5) +
-  geom_ribbon(aes(ymin=change.climate.PLS.min, ymax=change.climate.PLS.max), fill="aquamarine", alpha=0.5) +
-  scale_x_continuous(name="Year", expand=c(0,0)) +
-  scale_y_continuous(name="Change from Baseline Period [mm]", breaks=seq(-50,150,50)) +
-  theme_bw() +
-  theme(panel.grid=element_blank(),
-        panel.border=element_rect(color="black"))
 
 p.climate.LULC.hist <-
   ggplot(subset(df.ann.melt, variable %in% c("change.climate.MLR.mean", "change.climate.PCR.mean", "change.climate.PLS.mean"))) +
@@ -311,7 +378,7 @@ p.climate.LULC.hist <-
   scale_x_continuous(name="Change in Annual Runoff Depth [mm]", expand=c(0,0)) +
   scale_y_continuous(name="Density", expand=c(0,0)) +
   scale_fill_manual(name="Driver: ", 
-                    values=c("change.climate.PCR.mean"="#127D7D", "change.climate.MLR.mean"="forestgreen", "change.climate.PLS.mean"="aquamarine"), 
+                    values=c("change.climate.PLS.mean"="#127D7D", "change.climate.MLR.mean"="#D0951E", "change.climate.PCR.mean"="#D01E1E"), 
                     labels=c("change.climate.PCR.mean"="PCR", "change.climate.MLR.mean"="MLR", "change.climate.PLS.mean"="PLS"), guide=F) +
   theme_bw() +
   theme(panel.grid=element_blank(),
@@ -324,16 +391,3 @@ mean(subset(df.ann, year<=yr.baseline.end)$change.LULC.MLR.mean)
 mean(subset(df.ann, year<=yr.baseline.end)$change.climate.PLS.mean)
 mean(subset(df.ann, year<=yr.baseline.end)$change.LULC.PLS.mean)
 mean(subset(df.ann, year<=yr.baseline.end)$change.overall.mean)
-
-## save plots
-pdf(file=paste0(path.fig, "Figure_PheasantBranch_ComparePCR-MLR-MLS_NoText.pdf"), width=(181/25.4), height=(120/25.4))
-grid.arrange(
-  arrangeGrob(p.val.time+theme(text=element_blank(), plot.margin=unit(c(0,6,4,0), "mm")),
-             p.val.box+theme(text=element_blank(), plot.margin=unit(c(4,6,0,0), "mm")),
-             ncol=1),
-  arrangeGrob(p.ribbon.static+theme(text=element_blank(), plot.margin=unit(c(0,0,4,6), "mm")),
-             p.climate.LULC.hist+theme(text=element_blank(), plot.margin=unit(c(4,0,0,6), "mm")),
-             ncol=1),
-  ncol=2)
-dev.off()
-
