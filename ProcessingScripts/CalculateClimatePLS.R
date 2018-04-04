@@ -1,8 +1,9 @@
 CalculateClimatePLS <- function(df, mo, flux.name, var.options, 
                                 yr.baseline.start, yr.baseline.end, n.val.yr,
                                 p.thres=0.10, cum.var=0.80, min.var=0.01, min.PCs.keep=1, n.perm=250, seed=1,
-                                neg.allowed=F, write.vars.keep=T, write.PC.keep=T, write.perm=T,
+                                neg.allowed=F, write.vars.keep=F, write.PC.keep=F, write.perm=F,
                                 plot.dir=NULL){
+  require(pls)
   #' This script is intended to use partial least squares regression (PLS) to 
   #' build statistical relationships between meteorological variables and a
   #' hydrological flux of interest.
