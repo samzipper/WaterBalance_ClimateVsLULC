@@ -12,6 +12,7 @@ require(dplyr)
 require(lubridate)
 require(reshape2)
 require(gridExtra)
+require(multcompView)
 source(paste0(git.dir, "ProcessingScripts/FitMetrics.R"))
 
 # path to save figure output
@@ -287,107 +288,49 @@ ggsave(paste0(path.fig, "Figure_PheasantBranch_ComparePCR-MLR-PLS_NoText.pdf"),
          p.val.box+theme(text=element_blank(), plot.margin=unit(c(8,0,0,0), "mm")), ncol=1, heights=c(1, 0.6)), 
        width=(181/25.4), height=(180/25.4), units="in")
 
+#### statistics used in paper
+# fit statistics for monthly and annual
+paste0("NSE = ", val.PLS.NSE)
+paste0("RMSE = ", round(val.PLS.RMSE, 2), " mm (", round(100*val.PLS.NRMSE, 1), "%)")
 
-## statistics
-# prediction period
-mean(subset(df.ann, year>yr.baseline.end)$change.overall.mean)     # overall mean
-sd(subset(df.ann, year>yr.baseline.end)$change.overall.mean)
-t.test(subset(df.ann, year>yr.baseline.end)$change.overall.mean)
-mean(subset(df.ann, year>yr.baseline.end)$change.climate.PCR.mean)     # PCR climate mean
-sd(subset(df.ann, year>yr.baseline.end)$change.climate.PCR.mean)
-t.test(subset(df.ann, year>yr.baseline.end)$change.climate.PCR.mean)
-mean(subset(df.ann, year>yr.baseline.end)$change.LULC.PCR.mean)        # PCR LULC mean
-sd(subset(df.ann, year>yr.baseline.end)$change.LULC.PCR.mean)
-t.test(subset(df.ann, year>yr.baseline.end)$change.LULC.PCR.mean)
-mean(subset(df.ann, year>yr.baseline.end)$change.climate.MLR.mean)     # MLR climate mean
-sd(subset(df.ann, year>yr.baseline.end)$change.climate.MLR.mean)
-t.test(subset(df.ann, year>yr.baseline.end)$change.climate.MLR.mean)
-mean(subset(df.ann, year>yr.baseline.end)$change.LULC.MLR.mean)        # MLR LULC mean
-sd(subset(df.ann, year>yr.baseline.end)$change.LULC.MLR.mean)
-t.test(subset(df.ann, year>yr.baseline.end)$change.LULC.MLR.mean)
-mean(subset(df.ann, year>yr.baseline.end)$change.climate.PLS.mean)     # PLS climate mean
-sd(subset(df.ann, year>yr.baseline.end)$change.climate.PLS.mean)
-t.test(subset(df.ann, year>yr.baseline.end)$change.climate.PLS.mean)
-mean(subset(df.ann, year>yr.baseline.end)$change.LULC.PLS.mean)        # PLS LULC mean
-sd(subset(df.ann, year>yr.baseline.end)$change.LULC.PLS.mean)
-t.test(subset(df.ann, year>yr.baseline.end)$change.LULC.PLS.mean)
+paste0("NSE = ", val.PCR.NSE)
+paste0("RMSE = ", round(val.PCR.RMSE, 2), " mm (", round(100*val.PCR.NRMSE, 1), "%)")
 
-# calibration period
-mean(subset(df.ann, year<=yr.baseline.end)$change.overall.mean)     # overall mean
-sd(subset(df.ann, year<=yr.baseline.end)$change.overall.mean)
-t.test(subset(df.ann, year<=yr.baseline.end)$change.overall.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.climate.PCR.mean)     # PCR climate mean
-sd(subset(df.ann, year<=yr.baseline.end)$change.climate.PCR.mean)
-t.test(subset(df.ann, year<=yr.baseline.end)$change.climate.PCR.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.LULC.PCR.mean)        # PCR LULC mean
-sd(subset(df.ann, year<=yr.baseline.end)$change.LULC.PCR.mean)
-t.test(subset(df.ann, year<=yr.baseline.end)$change.LULC.PCR.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.climate.MLR.mean)     # MLR climate mean
-sd(subset(df.ann, year<=yr.baseline.end)$change.climate.MLR.mean)
-t.test(subset(df.ann, year<=yr.baseline.end)$change.climate.MLR.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.LULC.MLR.mean)        # MLR LULC mean
-sd(subset(df.ann, year<=yr.baseline.end)$change.LULC.MLR.mean)
-t.test(subset(df.ann, year<=yr.baseline.end)$change.LULC.MLR.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.climate.PLS.mean)     # PLS climate mean
-sd(subset(df.ann, year<=yr.baseline.end)$change.climate.PLS.mean)
-t.test(subset(df.ann, year<=yr.baseline.end)$change.climate.PLS.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.LULC.PLS.mean)        # PLS LULC mean
-sd(subset(df.ann, year<=yr.baseline.end)$change.LULC.PLS.mean)
-t.test(subset(df.ann, year<=yr.baseline.end)$change.LULC.PLS.mean)
-
-mean(subset(df.ann, year>yr.baseline.end)$change.climate.mean)/mean(subset(df.ann, year>yr.baseline.end)$change.overall.mean)
-mean(subset(df.ann, year>yr.baseline.end)$change.LULC.PCR.mean)/mean(subset(df.ann, year>yr.baseline.end)$change.overall.mean)
-mean(subset(df.ann, year>yr.baseline.end)$change.LULC.MLR.mean)/mean(subset(df.ann, year>yr.baseline.end)$change.overall.mean)
-mean(subset(df.ann, year>yr.baseline.end)$change.LULC.PLS.mean)/mean(subset(df.ann, year>yr.baseline.end)$change.overall.mean)
-
-sum(subset(df.ann, year>yr.baseline.end)$change.LULC.PCR.mean>0)        # PCR LULC positive effect number of years
-sum(subset(df.ann, year>yr.baseline.end)$change.climate.PCR.mean>0)
-sum(subset(df.ann, year>yr.baseline.end)$change.LULC.MLR.mean>0)        # MLR LULC positive effect number of years
-sum(subset(df.ann, year>yr.baseline.end)$change.climate.MLR.mean>0)
-sum(subset(df.ann, year>yr.baseline.end)$change.LULC.PLS.mean>0)        # PLS LULC positive effect number of years
-sum(subset(df.ann, year>yr.baseline.end)$change.climate.PLS.mean>0)
+paste0("NSE = ", val.MLR.NSE)
+paste0("RMSE = ", round(val.MLR.RMSE, 2), " mm (", round(100*val.MLR.NRMSE, 1), "%)")
 
 
-summary(lm(change.overall.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))   # overall trend
-summary(lm(change.climate.PCR.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))   # PCR climate trend
-summary(lm(change.LULC.PCR.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))      # PCR LULC trend
-summary(lm(change.climate.MLR.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))   # MLR climate trend
-summary(lm(change.LULC.MLR.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))      # MLR LULC trend
-summary(lm(change.climate.PLS.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))   # PLS climate trend
-summary(lm(change.LULC.PLS.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))      # PLS LULC trend
+paste0("NSE = ", val.PLS.yr.NSE)
+paste0("RMSE = ", round(val.PLS.yr.RMSE, 2), " mm (", round(100*val.PLS.yr.NRMSE, 1), "%)")
 
+paste0("NSE = ", val.PCR.yr.NSE)
+paste0("RMSE = ", round(val.PCR.yr.RMSE, 2), " mm (", round(100*val.PCR.yr.NRMSE, 1), "%)")
 
-summary(lm(change.overall.mean ~ year, data=subset(df.ann, year<=yr.baseline.end)))   # overall trend
-summary(lm(change.climate.PCR.mean ~ year, data=subset(df.ann, year<=yr.baseline.end)))   # PCR climate trend
-summary(lm(change.LULC.PCR.mean ~ year, data=subset(df.ann, year<=yr.baseline.end)))      # PCR LULC trend
-summary(lm(change.climate.MLR.mean ~ year, data=subset(df.ann, year<=yr.baseline.end)))   # MLR climate trend
-summary(lm(change.LULC.MLR.mean ~ year, data=subset(df.ann, year<=yr.baseline.end)))      # MLR LULC trend
-summary(lm(change.climate.PLS.mean ~ year, data=subset(df.ann, year<=yr.baseline.end)))   # PLS climate trend
-summary(lm(change.LULC.PLS.mean ~ year, data=subset(df.ann, year<=yr.baseline.end)))      # PLS LULC trend
+paste0("NSE = ", val.MLR.yr.NSE)
+paste0("RMSE = ", round(val.MLR.yr.RMSE, 2), " mm (", round(100*val.MLR.yr.NRMSE, 1), "%)")
 
-coef(lm(change.LULC.PCR.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]/coef(lm(change.overall.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]
-coef(lm(change.LULC.MLR.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]/coef(lm(change.overall.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]
-coef(lm(change.LULC.PLS.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]/coef(lm(change.overall.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]
+## statistically significant differences between classes
+generate_label_df <- function(TUKEY, variable){
+  # function from: http://www.r-graph-gallery.com/84-tukey-test/
+  
+  # Extract labels and factor levels from Tukey post-hoc 
+  Tukey.levels <- TUKEY[[variable]][,4]
+  Tukey.labels <- data.frame(multcompLetters(Tukey.levels)['Letters'])
+  
+  #I need to put the labels in the same order as in the boxplot :
+  Tukey.labels$treatment=rownames(Tukey.labels)
+  Tukey.labels=Tukey.labels[order(Tukey.labels$treatment) , ]
+  return(Tukey.labels)
+}
+for (mo in seq(1,12)){
+  df.labels <- generate_label_df(TukeyHSD(aov(lm(value ~ variable, data=subset(df.val.melt, month==mo)))), "variable")
+  df.labels$mo <- mo
+  df.labels$treatment <- factor(df.labels$treatment, levels=c("flux", "PLS", "PCR", "MLR"))
+  df.labels <- df.labels[order(df.labels$treatment), ]
+  if (mo==1){
+    df.labels.all <- df.labels
+  } else {
+    df.labels.all <- rbind(df.labels.all, df.labels)
+  }
 
-
-p.climate.LULC.hist <-
-  ggplot(subset(df.ann.melt, variable %in% c("change.climate.MLR.mean", "change.climate.PCR.mean", "change.climate.PLS.mean"))) +
-  geom_vline(xintercept=0, color="gray65") +
-  geom_density(aes(x=value, fill=variable), alpha=0.5, color=NA) +
-  geom_density(data=subset(df.ann.melt, variable=="change.overall.mean"), aes(x=value), color="black", fill=NA) +
-  scale_x_continuous(name="Change in Annual Runoff Depth [mm]", expand=c(0,0)) +
-  scale_y_continuous(name="Density", expand=c(0,0)) +
-  scale_fill_manual(name="Driver: ", 
-                    values=c("change.climate.PLS.mean"="#127D7D", "change.climate.MLR.mean"="#D0951E", "change.climate.PCR.mean"="#D01E1E"), 
-                    labels=c("change.climate.PCR.mean"="PCR", "change.climate.MLR.mean"="MLR", "change.climate.PLS.mean"="PLS"), guide=F) +
-  theme_bw() +
-  theme(panel.grid=element_blank(),
-        panel.border=element_rect(color="black"))
-
-mean(subset(df.ann, year<=yr.baseline.end)$change.climate.PCR.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.LULC.PCR.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.climate.MLR.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.LULC.MLR.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.climate.PLS.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.LULC.PLS.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.overall.mean)
+}

@@ -122,32 +122,32 @@ df.sig.LULC <- data.frame(year=seq(1992,1998),
                           yr.1996=NaN,
                           yr.1997=NaN,
                           yr.1998=NaN)
-df.sig.LULC$yr.1992[df.sig$year==1993] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1992[df.sig$year==1994] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1992[df.sig$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1992[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1992[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1992[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1992[df.sig.LULC$year==1993] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1992[df.sig.LULC$year==1994] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1992[df.sig.LULC$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1992[df.sig.LULC$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1992[df.sig.LULC$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1992[df.sig.LULC$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
 
-df.sig.LULC$yr.1993[df.sig$year==1994] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1993[df.sig$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1993[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1993[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1993[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1993[df.sig.LULC$year==1994] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1993[df.sig.LULC$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1993[df.sig.LULC$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1993[df.sig.LULC$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1993[df.sig.LULC$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
 
-df.sig.LULC$yr.1994[df.sig$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1994[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1994[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1994[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1994[df.sig.LULC$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1994[df.sig.LULC$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1994[df.sig.LULC$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1994[df.sig.LULC$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
 
-df.sig.LULC$yr.1995[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1995[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1995[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1995[df.sig.LULC$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1995[df.sig.LULC$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1995[df.sig.LULC$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
 
-df.sig.LULC$yr.1996[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
-df.sig.LULC$yr.1996[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1996[df.sig.LULC$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1996[df.sig.LULC$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
 
-df.sig.LULC$yr.1997[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
+df.sig.LULC$yr.1997[df.sig.LULC$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.LULC.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.LULC.mean)$p.value
 
 df.sig.climate <- data.frame(year=seq(1992,1998),
                              yr.1992=NaN,
@@ -157,32 +157,32 @@ df.sig.climate <- data.frame(year=seq(1992,1998),
                              yr.1996=NaN,
                              yr.1997=NaN,
                              yr.1998=NaN)
-df.sig.climate$yr.1992[df.sig$year==1993] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean)$p.value
-df.sig.climate$yr.1992[df.sig$year==1994] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean)$p.value
-df.sig.climate$yr.1992[df.sig$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean)$p.value
-df.sig.climate$yr.1992[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean)$p.value
-df.sig.climate$yr.1992[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
-df.sig.climate$yr.1992[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
+df.sig.climate$yr.1992[df.sig.climate$year==1993] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean)$p.value
+df.sig.climate$yr.1992[df.sig.climate$year==1994] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean)$p.value
+df.sig.climate$yr.1992[df.sig.climate$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean)$p.value
+df.sig.climate$yr.1992[df.sig.climate$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean)$p.value
+df.sig.climate$yr.1992[df.sig.climate$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
+df.sig.climate$yr.1992[df.sig.climate$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1992)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
 
-df.sig.climate$yr.1993[df.sig$year==1994] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean)$p.value
-df.sig.climate$yr.1993[df.sig$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean)$p.value
-df.sig.climate$yr.1993[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean)$p.value
-df.sig.climate$yr.1993[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
-df.sig.climate$yr.1993[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
+df.sig.climate$yr.1993[df.sig.climate$year==1994] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean)$p.value
+df.sig.climate$yr.1993[df.sig.climate$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean)$p.value
+df.sig.climate$yr.1993[df.sig.climate$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean)$p.value
+df.sig.climate$yr.1993[df.sig.climate$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
+df.sig.climate$yr.1993[df.sig.climate$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1993)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
 
-df.sig.climate$yr.1994[df.sig$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean)$p.value
-df.sig.climate$yr.1994[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean)$p.value
-df.sig.climate$yr.1994[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
-df.sig.climate$yr.1994[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
+df.sig.climate$yr.1994[df.sig.climate$year==1995] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean)$p.value
+df.sig.climate$yr.1994[df.sig.climate$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean)$p.value
+df.sig.climate$yr.1994[df.sig.climate$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
+df.sig.climate$yr.1994[df.sig.climate$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1994)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
 
-df.sig.climate$yr.1995[df.sig$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean)$p.value
-df.sig.climate$yr.1995[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
-df.sig.climate$yr.1995[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
+df.sig.climate$yr.1995[df.sig.climate$year==1996] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean)$p.value
+df.sig.climate$yr.1995[df.sig.climate$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
+df.sig.climate$yr.1995[df.sig.climate$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1995)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
 
-df.sig.climate$yr.1996[df.sig$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
-df.sig.climate$yr.1996[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
+df.sig.climate$yr.1996[df.sig.climate$year==1997] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean)$p.value
+df.sig.climate$yr.1996[df.sig.climate$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1996)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
 
-df.sig.climate$yr.1997[df.sig$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
+df.sig.climate$yr.1997[df.sig.climate$year==1998] <- t.test(subset(df.LULCvClimate.prediction, yr.baseline.end==1997)$change.climate.mean, subset(df.LULCvClimate.prediction, yr.baseline.end==1998)$change.climate.mean)$p.value
 
 df.sig.climate.logical <- df.sig.climate<0.05
 df.sig.LULC.logical <- df.sig.LULC<0.05

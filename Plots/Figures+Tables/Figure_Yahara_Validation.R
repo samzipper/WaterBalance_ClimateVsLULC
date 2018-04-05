@@ -116,9 +116,3 @@ grid.arrange(p.val.scatter+theme(text=element_blank(), plot.margin=unit(c(0,6,0,
              p.val.box+theme(text=element_blank(), plot.margin=unit(c(0,0,0,6), "mm"), panel.spacing=unit(9, "mm")),
              ncol=2)
 dev.off()
-
-png(file=paste0(path.fig, "Figure_Yahara_Validation.png"), width=(181/25.4), height=(120/25.4), units="in", res=150)
-grid.arrange(p.val.scatter,
-             p.val.box,
-             ncol=2)
-dev.off()

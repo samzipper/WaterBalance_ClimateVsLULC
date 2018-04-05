@@ -473,7 +473,7 @@ p.climate.LULC.hist.aet <-
   facet_grid(LULC ~ climate) +
   ggtitle("Top Labels=Climate, Right Side=LULC") +
   scale_x_continuous(name="Change in Annual Depth [mm]", breaks=seq(-50,150,50)) +
-  scale_y_continuous(name="Density", breaks=seq(0,0.02,0.01)) +
+  scale_y_continuous(name="Density", breaks=seq(0,0.03,0.01)) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))
@@ -487,7 +487,7 @@ p.climate.LULC.hist.drainage <-
   facet_grid(LULC ~ climate) +
   ggtitle("Top Labels=Climate, Right Side=LULC") +
   scale_x_continuous(name="Change in Annual Depth [mm]", breaks=seq(-250,250,250)) +
-  scale_y_continuous(name="Density") +
+  scale_y_continuous(name="Density", breaks=seq(0,0.008,0.004)) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))
@@ -501,7 +501,7 @@ p.climate.LULC.hist.srunoff <-
   facet_grid(LULC ~ climate) +
   ggtitle("Top Labels=Climate, Right Side=LULC") +
   scale_x_continuous(name="Change in Annual Depth [mm]") +
-  scale_y_continuous(name="Density", breaks=seq(0,0.02,0.01)) +
+  scale_y_continuous(name="Density", breaks=seq(0,0.03,0.01)) +
   theme_bw() +
   theme(panel.grid=element_blank(),
         panel.border=element_rect(color="black"))

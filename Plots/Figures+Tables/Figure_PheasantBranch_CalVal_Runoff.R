@@ -153,43 +153,19 @@ p.val.box <-
 
 ## results plots
 # statistics
-mean(subset(df.ann, year>yr.baseline.end)$change.overall.static.mean)     # overall mean
-sd(subset(df.ann, year>yr.baseline.end)$change.overall.static.mean)
 t.test(subset(df.ann, year>yr.baseline.end)$change.overall.static.mean)
-mean(subset(df.ann, year>yr.baseline.end)$change.climate.static.mean)     # climate mean
-sd(subset(df.ann, year>yr.baseline.end)$change.climate.static.mean)
 t.test(subset(df.ann, year>yr.baseline.end)$change.climate.static.mean)
-mean(subset(df.ann, year>yr.baseline.end)$change.LULC.static.mean)        # LULC mean
-sd(subset(df.ann, year>yr.baseline.end)$change.LULC.static.mean)
 t.test(subset(df.ann, year>yr.baseline.end)$change.LULC.static.mean)
 
-mean(subset(df.ann, year<=yr.baseline.end)$change.overall.static.mean)     # overall mean
-sd(subset(df.ann, year<=yr.baseline.end)$change.overall.static.mean)
-t.test(subset(df.ann, year<=yr.baseline.end)$change.overall.static.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.climate.static.mean)     # climate mean
-sd(subset(df.ann, year<=yr.baseline.end)$change.climate.static.mean)
-t.test(subset(df.ann, year<=yr.baseline.end)$change.climate.static.mean)
-mean(subset(df.ann, year<=yr.baseline.end)$change.LULC.static.mean)        # LULC mean
-sd(subset(df.ann, year<=yr.baseline.end)$change.LULC.static.mean)
-t.test(subset(df.ann, year<=yr.baseline.end)$change.LULC.static.mean)
+summary(lm(change.overall.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))   # overall trend
+summary(lm(change.climate.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))   # climate trend
+summary(lm(change.LULC.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))      # LULC trend
 
 mean(subset(df.ann, year>yr.baseline.end)$change.climate.static.mean)/mean(subset(df.ann, year>yr.baseline.end)$change.overall.static.mean)
 mean(subset(df.ann, year>yr.baseline.end)$change.LULC.static.mean)/mean(subset(df.ann, year>yr.baseline.end)$change.overall.static.mean)
 
 sum(subset(df.ann, year>yr.baseline.end)$change.LULC.static.mean>0)        # LULC positive effect number of years
 sum(subset(df.ann, year>yr.baseline.end)$change.climate.static.mean>0)
-
-
-summary(lm(change.overall.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))   # overall trend
-summary(lm(change.climate.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))   # climate trend
-summary(lm(change.LULC.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))      # LULC trend
-
-
-summary(lm(change.overall.static.mean ~ year, data=subset(df.ann, year<=yr.baseline.end)))   # overall trend
-summary(lm(change.climate.static.mean ~ year, data=subset(df.ann, year<=yr.baseline.end)))   # climate trend
-summary(lm(change.LULC.static.mean ~ year, data=subset(df.ann, year<=yr.baseline.end)))      # LULC trend
-
-coef(lm(change.LULC.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]/coef(lm(change.overall.static.mean ~ year, data=subset(df.ann, year>yr.baseline.end)))[2]
 
 # plots
 p.ribbon.static <- 

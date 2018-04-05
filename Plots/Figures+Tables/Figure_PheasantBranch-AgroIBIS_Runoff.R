@@ -125,7 +125,7 @@ mean(subset(df.ann, year<1996)$change.LULC.mean)        # LULC mean
 sd(subset(df.ann, year<1996)$change.LULC.mean)
 t.test(subset(df.ann, year<1996)$change.LULC.mean)
 
-mean(subset(df.ann, year>=1996 & year<=2013 & year<=2013)$change.climate.mean)/mean(subset(df.ann, year>=1996 & year<=2013)$change.overall.mean)
+mean(subset(df.ann, year>=1996 & year<=2013)$change.climate.mean)/mean(subset(df.ann, year>=1996 & year<=2013)$change.overall.mean)
 mean(subset(df.ann, year>=1996 & year<=2013)$change.LULC.mean)/mean(subset(df.ann, year>=1996 & year<=2013)$change.overall.mean)
 
 sum(subset(df.ann, year>=1996 & year<=2013)$change.LULC.mean>0)        # LULC positive effect number of years
