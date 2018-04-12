@@ -240,7 +240,7 @@ for (flux.name in flux.name.all){
       # run PCR script
       df.out.mo <- CalculateClimatePLS(df=df, mo=mo, flux.name=flux.name, var.options=var.options,
                                        yr.baseline.start=yr.baseline.start, yr.baseline.end=yr.baseline.end,
-                                       n.perm=n.perm, n.val.yr=n.val.yr, p.thres=p.thres, cum.var=cum.var, min.var=min.var, 
+                                       n.perm=n.perm, n.val.yr=n.val.yr, p.thres=p.thres, cum.var=cum.var, 
                                        neg.allowed=F, write.vars.keep=F, write.perm=F)
       df.out.mo$yr.baseline.start <- yr.baseline.start
       df.out.mo$yr.baseline.end <- yr.baseline.end

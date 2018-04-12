@@ -30,7 +30,6 @@ p.thres <- 0.10
 
 # variance for selecting options
 cum.var <- 0.8
-min.var <- 0.01
 
 ## decide "baseline" period (inclusive)
 # 1986-2013 = 28 years, 1986-1999 = 14 years
@@ -228,14 +227,10 @@ for (flux.name in flux.name.all){
       neg.allowed=F
     }
     
-    # figure out number of predictors to retain, based on PC.keep
-    PCs.keep <- read.csv(paste0(git.dir, "Data/PheasantBranch-AgroIBIS/PCR_Output/", flux.name, "_GHCN_MonthlyRegressions_PC.keep_", sprintf("%02d", mo), ".csv"))
-    min.PCs.keep <- length(PCs.keep$PC)
-    
     # run PLS script
     df.out.mo <- CalculateClimatePLS(df=df, mo=mo, flux.name=flux.name, var.options=var.options,
                                      yr.baseline.start=yr.baseline.start, yr.baseline.end=yr.baseline.end, n.val.yr=n.val.yr,
-                                     p.thres=p.thres, neg.allowed=neg.allowed, min.PCs.keep=min.PCs.keep, write.vars.keep=F, write.perm=F)
+                                     p.thres=p.thres, neg.allowed=neg.allowed, min.PCs.keep=1, write.vars.keep=F, write.perm=F)
     
     # add flux name
     df.out.mo$flux.name <- flux.name

@@ -1,6 +1,6 @@
 CalculateClimatePLS <- function(df, mo, flux.name, var.options, 
                                 yr.baseline.start, yr.baseline.end, n.val.yr,
-                                p.thres=0.10, cum.var=0.80, min.var=0.01, min.PCs.keep=1, n.perm=250, seed=1,
+                                p.thres=0.10, cum.var=0.80, min.PCs.keep=1, n.perm=250, seed=1,
                                 neg.allowed=F, write.vars.keep=F, write.PC.keep=F, write.perm=F,
                                 plot.dir=NULL){
   require(pls)
@@ -20,7 +20,6 @@ CalculateClimatePLS <- function(df, mo, flux.name, var.options,
   #'  
   #'  -p.thres           = significance threshold for pruning [numeric]
   #'  -cum.var           = cumulative variance explained used for selecting retained PCs [numeric, 0-1]
-  #'  -min.var           = minimum variance explained used for selecting retained PCs [numeric, 0-1]
   #'  -min.PCs.keep      = minimum number of PCs to retain for PLS regression [numeric]
   #'  -n.perm            = number of permutations to iterate for uncertainty calculations [numeric]
   #'  -seed              = seed value for random number generator [numeric]

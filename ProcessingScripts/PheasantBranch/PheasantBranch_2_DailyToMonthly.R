@@ -234,3 +234,119 @@ df.PM.mo <- dplyr::summarize(group_by(df.PM, year, month),
 
 # save output
 write.csv(df.PM.mo, "USW00014837_GHCN_Monthly.csv", row.names=F)
+
+## Third: process Arlington GHCN meteorological data
+# load GHCN data
+df.GHCN.ARL <- read.csv("USC00470308_GapFilled.csv", stringsAsFactors=F)
+df.GHCN.ARL$date <- ymd(df.GHCN.ARL$DATE)
+df.GHCN.ARL$year <- year(df.GHCN.ARL$date)
+df.GHCN.ARL$DOY <- yday(df.GHCN.ARL$date)
+
+# make sure no TMAX<TMIN
+df.GHCN.ARL$TMAX[df.GHCN.ARL$TMAX<df.GHCN.ARL$TMIN] <- df.GHCN.ARL$TMIN[df.GHCN.ARL$TMAX<df.GHCN.ARL$TMIN]
+
+# merge Arlington with GHCN
+df.GHCN.ARL <- merge(df.GHCN.ARL, df.ARL, by=c("date"), all.x=T)
+
+# station information from GHCN website (https://www.ncdc.noaa.gov/cdo-web/datasets/GHCND/stations/GHCND:USW00014837/detail)
+GHCN.lat <- 43.3
+GHCN.lon <- -89.3426
+GHCN.elev <- 329 # [m]
+
+# estimate solar radiation at edge of atmosphere based on latitude and DOYdf.GHCN.ARL$solar.toa <- PotentialSolar(lat=GHCN.lat*pi/180, Jday=df.GHCN.ARL$DOY)   # [kJ/m2/day]
+df.GHCN.ARL$solar.toa <- PotentialSolar(lat=GHCN.lat*pi/180, Jday=df.GHCN.ARL$DOY)   # [kJ/m2/day]
+df.GHCN.ARL$solar.toa.W_m2 <- df.GHCN.ARL$solar.toa*1000/86400
+
+## calculate top-of-canopy radiation
+# figure out max transmissivity (A parameter)
+#p.trans.A <- 
+#  ggplot(df.GHCN.ARL, aes(x=DAvSol/solar.toa.W_m2)) +
+#  geom_histogram(binwidth=0.01) +
+#  scale_x_continuous() +
+#  geom_vline(xintercept=0.75, color="red")
+trans.A <- 0.75  # the default, 0.75, seems pretty close based on the plot
+
+# tune the C parameter
+df.tune <- subset(df.GHCN.ARL, is.finite(solar.toa) & is.finite(DAvSol))
+#qplot(df.tune$DAvSol, binwidth=2)
+df.fit <- data.frame(trans.C = seq(0.1,5,0.025),
+                     NSE = NaN,
+                     RMSE = NaN)
+for (trans.C in df.fit$trans.C){
+  i <- which(df.fit$trans.C == trans.C) 
+  df.tune$solar.canopy.W_m2 <- df.tune$solar.toa*(1000/86400)*
+    transmissivity(Tx=df.tune$TMAX, Tn=df.tune$TMIN, A=trans.A, C=trans.C, opt="1day", JD=df.tune$DOY)
+  df.fit$NSE[i] <- NashSutcliffe(df.tune$solar.canopy.W_m2, df.tune$DAvSol)
+  df.fit$RMSE[i] <- RMSE(df.tune$solar.canopy.W_m2, df.tune$DAvSol)
+}
+
+# choose best trans.C
+#qplot(RMSE, trans.C, data=df.fit)
+trans.C <- df.fit$trans.C[which.min(df.fit$RMSE)]
+
+df.tune$solar.canopy.W_m2 <- df.tune$solar.toa*(1000/86400)*
+  transmissivity(Tx=df.tune$TMAX, Tn=df.tune$TMIN, A=trans.A, C=trans.C, opt="1day", JD=df.tune$DOY)
+
+# linear bias adjustment
+#qplot(DAvSol, solar.canopy.W_m2, data=df.tune) + geom_abline(intercept=0, slope=1, color="red") + stat_smooth(method="lm")
+fit.tune <- lm(solar.canopy.W_m2 ~ DAvSol, data=df.tune)
+df.tune$solar.canopy.W_m2.adj <- (df.tune$solar.canopy.W_m2-coef(fit.tune)[1])/coef(fit.tune)[2]
+#qplot(DAvSol, solar.canopy.W_m2.adj, data=df.tune) + geom_abline(intercept=0, slope=1, color="red") + stat_smooth(method="lm")
+
+# calculate solar radiation
+df.GHCN.ARL$solar.canopy <- df.GHCN.ARL$solar.toa*transmissivity(Tx=df.GHCN.ARL$TMAX, Tn=df.GHCN.ARL$TMIN, A=trans.A, C=trans.C, opt="1day", JD=df.tune$DOY)
+df.GHCN.ARL$rads <- df.GHCN.ARL$solar.canopy*1000/86400  # convert to incoming SW radiation [kJ/m2/day] to [W/m2]=[J/m2/s]
+df.GHCN.ARL$rads <- (df.GHCN.ARL$rads-coef(fit.tune)[1])/coef(fit.tune)[2]
+df.GHCN.ARL$rads[df.GHCN.ARL$rads<=0] <- 0
+#qplot(DAvSol, rads, data=df.GHCN.ARL) + geom_abline(intercept=0, slope=1, color="red") + stat_smooth(method="lm")
+
+# estimate daily actual vapor pressure based on the saturation vapor pressure at Tmin
+# (assumes that air is ~saturated at dawn for dew formation), from FAO56 Eq. 48
+df.GHCN.ARL$ea <- SatVaporPressure(df.GHCN.ARL$TMIN)
+
+# join with overall data frame
+df.GHCN.ARL <- left_join(df.GHCN.ARL, df.GHCN.longterm.DOY[,c("DOY","wind")], by="DOY")
+
+# make your data frame to plug in to Penman Monteith
+df.PM.ARL <- data.frame(DATE = df.GHCN.ARL$date,
+                        year = df.GHCN.ARL$year,
+                        month = month(df.GHCN.ARL$date),
+                        DOY = df.GHCN.ARL$DOY,
+                        srad = df.GHCN.ARL$rads,
+                        TMAX = df.GHCN.ARL$TMAX,
+                        TMIN = df.GHCN.ARL$TMIN,
+                        es_mean = (SatVaporPressure(df.GHCN.ARL$TMAX)+df.GHCN.ARL$ea)/2,
+                        ea_mean = df.GHCN.ARL$ea,
+                        prec = df.GHCN.ARL$PRCP,
+                        wind = df.GHCN.ARL$wind,
+                        LAT = GHCN.lat,
+                        ELEV = GHCN.elev)
+
+# calculate RET
+ETo <- PenmanMonteith(df.PM.ARL)
+df.PM.ARL$RET <- ETo$ETo
+
+# save output
+write.csv(df.PM.ARL, "USC00470308_GHCN_Daily.csv", row.names=F)
+
+# summarize to monthly
+df.PM.ARL.mo <- dplyr::summarize(group_by(df.PM.ARL, year, month),
+                                 prec.days = sum(prec>0),
+                                 prec.max = max(prec),
+                                 prec.gt.12 = sum(prec>12.7),
+                                 prec.gt.25 = sum(prec>25.4),
+                                 prec.gt.50 = sum(prec>50.8),
+                                 prec.gt.76 = sum(prec>76.2),
+                                 tmin = mean(TMIN),
+                                 tmax = mean(TMAX),
+                                 rads = mean(srad),
+                                 relh = mean(100*ea_mean/es_mean),
+                                 prec = sum(prec),
+                                 wspd = mean(wind),
+                                 VPD = mean(es_mean-ea_mean),
+                                 es = mean(es_mean),
+                                 ea = mean(ea_mean),
+                                 RET = sum(RET))
+
+# save output
+write.csv(df.PM.ARL.mo, "USC00470308_GHCN_Monthly.csv", row.names=F)

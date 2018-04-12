@@ -57,7 +57,7 @@ yr.baseline.end.all <- c(1995)
 
 ## which flux to analyze?
 #flux.name.all <- c("discharge.mm")
-flux.name.all <- c("discharge.mm")
+flux.name.all <- c("baseflow.mm", "runoff.mm")
 
 # read in discharge and met data frames
 df.met <- read.csv(paste0(git.dir, "Data/PheasantBranch/USW00014837_GHCN_Monthly.csv"))  # use same met data as McFarland
@@ -225,14 +225,10 @@ for (yr.baseline.end in yr.baseline.end.all){
   for (flux.name in flux.name.all){
     for (mo in mo.list){
       
-      # figure out number of predictors to retain, based on PC.keep
-      PCs.keep <- read.csv(paste0(git.dir, "Data/PheasantBranch/", flux.name, "/", yr.baseline.end, "/GHCN_MonthlyRegressions_PC.keep_", sprintf("%02d", mo), ".csv"))
-      min.PCs.keep <- length(PCs.keep$PC)
-      
       # run regressions
       df.out.mo <- CalculateClimatePLS(df=df, mo=mo, flux.name=flux.name, var.options=var.options,
                                        yr.baseline.start=yr.baseline.start, yr.baseline.end=yr.baseline.end, n.val.yr=n.val.yr,
-                                       p.thres=p.thres, neg.allowed=F, min.PCs.keep=min.PCs.keep, write.vars.keep=T, write.perm=F)
+                                       p.thres=p.thres, neg.allowed=F, min.PCs.keep=1, write.vars.keep=T, write.perm=F)
       
       # combine with other data
       if (exists("df.out")){

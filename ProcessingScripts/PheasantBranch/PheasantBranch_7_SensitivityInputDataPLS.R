@@ -60,23 +60,23 @@ n.perm <- 250
 
 # read in discharge and met data frames
 df.met.GHCN <- read.csv(paste0(git.dir, "Data/PheasantBranch/USW00014837_GHCN_Monthly.csv"))  # Madison airport met data
-df.met.grid <- read.csv(paste0(git.dir, "Data/PheasantBranch-AgroIBIS/PheasantBranch_AIAI_waterbalance_monthly.csv"))  # gridded Yahara2070 met data
+df.met.ARL <- read.csv(paste0(git.dir, "Data/PheasantBranch/USC00470308_GHCN_Monthly.csv"))  # Arlington met data
 
 # process to make sure it is the same columns and years
-df.met.GHCN <- df.met.GHCN[, intersect(names(df.met.GHCN), names(df.met.grid))]
-df.met.grid <- df.met.grid[, intersect(names(df.met.GHCN), names(df.met.grid))]
+df.met.GHCN <- df.met.GHCN[, intersect(names(df.met.GHCN), names(df.met.ARL))]
+df.met.ARL <- df.met.ARL[, intersect(names(df.met.GHCN), names(df.met.ARL))]
 
-df.met.GHCN <- subset(df.met.GHCN, year %in% intersect(unique(df.met.GHCN$year), unique(df.met.grid$year)))
-df.met.grid <- subset(df.met.grid, year %in% intersect(unique(df.met.GHCN$year), unique(df.met.grid$year)))
+df.met.GHCN <- subset(df.met.GHCN, year %in% intersect(unique(df.met.GHCN$year), unique(df.met.ARL$year)))
+df.met.ARL <- subset(df.met.ARL, year %in% intersect(unique(df.met.GHCN$year), unique(df.met.ARL$year)))
 
 # read in discharge data
 df.Q <- read.csv("PheasantBranch_BaseflowSeparation_Monthly.csv")   # this is from the WHAT online baseflow separation filter for Pheasant branch
 
 ## scroll through different met datasets
-for (met.data in c("GHCN", "grid")){
+for (met.data in c("GHCN", "ARL")){
   # merge data frames, with df.met defining the temporal extent
   if (met.data=="GHCN") df <- merge(df.met.GHCN, df.Q, all.x=T)
-  if (met.data=="grid") df <- merge(df.met.grid, df.Q, all.x=T)
+  if (met.data=="ARL") df <- merge(df.met.ARL, df.Q, all.x=T)
   
   # make column for output variable
   df$discharge.est <- NaN
@@ -309,9 +309,9 @@ p.change.climate <-
   geom_hline(yintercept=0, color="gray65") +
   geom_ribbon(data=subset(df.LULCvClimate.baseline, met.data=="GHCN"), 
               aes(x=year, ymin=change.climate.min, ymax=change.climate.max), fill="red", alpha=0.5) +
-  geom_ribbon(data=subset(df.LULCvClimate.baseline, met.data=="grid"), 
+  geom_ribbon(data=subset(df.LULCvClimate.baseline, met.data=="ARL"), 
               aes(x=year, ymin=change.climate.min, ymax=change.climate.max), fill="blue", alpha=0.5) +
-  geom_line(data=subset(df.LULCvClimate.baseline, met.data=="grid"),
+  geom_line(data=subset(df.LULCvClimate.baseline, met.data=="ARL"),
             aes(x=year, y=change.overall.mean), color="black") +
   theme_bw() +
   theme(panel.grid=element_blank(),
