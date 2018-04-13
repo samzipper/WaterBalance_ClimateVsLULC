@@ -460,7 +460,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.5507368"
-     inkscape:cx="329.18111"
+     inkscape:cx="220.52308"
      inkscape:cy="157.56772"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -725,15 +725,15 @@
         <text
            xml:space="preserve"
            style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           x="24.811197"
+           x="122.78239"
            y="856.7558"
            id="text4136-2-1-7-6-5"
            sodipodi:linespacing="125%"><tspan
              sodipodi:role="line"
              id="tspan4138-4-4-9-7-2"
-             x="24.811197"
+             x="122.78239"
              y="856.7558"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial">Transform retained predictors to PLS factors</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle">Transform retained predictors to PLS factors</tspan></text>
         <g
            id="g6910"
            transform="translate(-1.5608721,0)">
@@ -916,20 +916,20 @@
              sodipodi:linespacing="125%"
              id="text4136-2-5-3-4"
              y="840.48749"
-             x="507.5769"
+             x="573.4845"
              style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              xml:space="preserve"><tspan
-               style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial"
+               style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle"
                y="840.48749"
-               x="507.5769"
+               x="573.4845"
                id="tspan4138-4-7-0-7"
                sodipodi:role="line">ΔHF<tspan
    id="tspan4637"
-   style="font-size:7.5px;baseline-shift:sub">LU,m,y</tspan> = HF<tspan
+   style="font-size:7.5px;text-align:center;baseline-shift:sub;text-anchor:middle">LU,m,y</tspan> = HF<tspan
    id="tspan4596-8"
-   style="font-size:7.5px;baseline-shift:sub">m,y</tspan> - HF<tspan
+   style="font-size:7.5px;text-align:center;baseline-shift:sub;text-anchor:middle">m,y</tspan> - HF<tspan
    id="tspan4600-3"
-   style="font-size:7.5px;baseline-shift:sub">PLS,m,y</tspan></tspan></text>
+   style="font-size:7.5px;text-align:center;baseline-shift:sub;text-anchor:middle">PLSR,m,y</tspan></tspan></text>
         </g>
       </g>
     </g>
@@ -966,20 +966,20 @@
              sodipodi:linespacing="125%"
              id="text4136-2-5-3"
              y="887.58429"
-             x="481.27942"
+             x="566.06885"
              style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
              xml:space="preserve"><tspan
-               style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial"
+               style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle"
                y="887.58429"
-               x="481.27942"
+               x="566.06885"
                id="tspan4138-4-7-0"
                sodipodi:role="line">ΔHF<tspan
    id="tspan4563-0"
-   style="font-size:7.5px;baseline-shift:sub">climate,m,y</tspan> = HF<tspan
-   style="font-size:7.5px;baseline-shift:sub"
-   id="tspan4763">PLS,m,y</tspan> - HF<tspan
+   style="font-size:7.5px;text-align:center;baseline-shift:sub;text-anchor:middle">climate,m,y</tspan> = HF<tspan
+   style="font-size:7.5px;text-align:center;baseline-shift:sub;text-anchor:middle"
+   id="tspan4763">PLSR,m,y</tspan> - HF<tspan
    id="tspan4600"
-   style="font-size:7.5px;baseline-shift:sub">m,baseline</tspan></tspan></text>
+   style="font-size:7.5px;text-align:center;baseline-shift:sub;text-anchor:middle">m,baseline</tspan></tspan></text>
         </g>
       </g>
     </g>
@@ -1013,17 +1013,17 @@
         <text
            xml:space="preserve"
            style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           x="516.875"
+           x="537.75085"
            y="926.41016"
            id="text4136-2-5"
            sodipodi:linespacing="125%"><tspan
              sodipodi:role="line"
              id="tspan4138-4-7"
-             x="516.875"
+             x="537.75085"
              y="926.41016"
-             style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial">HF<tspan
-   style="font-size:7.5px;baseline-shift:sub"
-   id="tspan4563">PLS,m,y</tspan></tspan></text>
+             style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle">HF<tspan
+   style="font-size:7.5px;text-align:center;baseline-shift:sub;text-anchor:middle"
+   id="tspan4563">PLSR,m,y</tspan></tspan></text>
       </g>
     </g>
     <g

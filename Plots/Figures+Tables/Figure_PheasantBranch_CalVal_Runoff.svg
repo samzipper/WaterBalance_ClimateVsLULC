@@ -2266,14 +2266,14 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4104645"
-     inkscape:cx="24.595689"
+     inkscape:cx="301.79052"
      inkscape:cy="260.45432"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1536"
      inkscape:window-height="801"
-     inkscape:window-x="-8"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showguides="true"
@@ -27835,47 +27835,47 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="225.18134"
+       x="221.18134"
        y="249.58325"
        id="text5860-3-0-2-5-5"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan5862-0-8-8-2-5"
-         x="225.18134"
+         x="221.18134"
          y="249.58325"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle">Legend</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="214.47232"
+       x="210.47232"
        y="263.0621"
        id="text5860-6-3-2-7-41-7-4-1-7"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan5862-6-6-1-5-23-65-3-9-94"
-         x="214.47232"
+         x="210.47232"
          y="263.0621"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial">Observed</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#127d7d;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="214.18423"
+       x="210.18423"
        y="274.61914"
        id="text5860-6-3-2-7-41-7-4-1-7-0"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan5862-6-6-1-5-23-65-3-9-94-0"
-         x="214.18423"
+         x="210.18423"
          y="274.61914"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;fill:#1b6464;fill-opacity:1">Predicted (PLS)</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;fill:#1b6464;fill-opacity:1">Predicted (PLSR)</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 199.85923,259.77002 12.67605,0"
+       d="m 195.85923,259.77002 12.67605,0"
        id="path81892"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#127d7d;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 199.85923,271.74185 12.67605,0"
+       d="m 195.85923,271.74185 12.67605,0"
        id="path81892-9"
        inkscape:connector-curvature="0" />
     <text

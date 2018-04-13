@@ -2282,14 +2282,14 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4104645"
-     inkscape:cx="254.67618"
+     inkscape:cx="135.21199"
      inkscape:cy="224.03967"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1536"
      inkscape:window-height="801"
-     inkscape:window-x="-8"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showguides="true"
@@ -15094,7 +15094,7 @@
          id="tspan5862-6-6-1-5-23-65-3-9-94-0"
          x="214.18423"
          y="274.61914"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;fill:#1b6464;fill-opacity:1">Predicted (PLS)</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:Arial;-inkscape-font-specification:Arial;fill:#1b6464;fill-opacity:1">Predicted (PLSR)</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 199.85923,259.77002 12.67605,0"

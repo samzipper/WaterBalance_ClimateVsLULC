@@ -83,7 +83,7 @@ p.fit.group.baseline <-
   geom_hline(yintercept=0, color="gray65") +
   scale_x_continuous(name="End of Baseline Period [year]", 
                      breaks=seq(min(df.baseline$yr.baseline.end), max(df.baseline$yr.baseline.end))) +
-  scale_y_continuous(name="NSE [mm]", breaks=seq(0,0.8,0.2)) +
+  scale_y_continuous(name="NSE", breaks=seq(0,0.8,0.2)) +
   scale_fill_manual(values=c("cal"="#ff1d25", "val"="#127D7D"), guide=F) +
   theme_bw() +
   theme(panel.grid=element_blank(),
@@ -112,6 +112,9 @@ grid.arrange(p.fit.group.baseline+theme(text=element_blank(), plot.margin=unit(c
              p.change.baseline+theme(text=element_blank(), plot.margin=unit(c(4,0.5,0,0), "mm")),
              ncol=1, heights=c(0.25,1))
 dev.off()
+
+## statistics
+subset(df.baseline.melt, group=="val")
 
 # comparison of mean LULC and climate effects depending on baseline period end
 df.sig.LULC <- data.frame(year=seq(1992,1998),
